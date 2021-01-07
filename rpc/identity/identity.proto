@@ -1,0 +1,1745 @@
+syntax = "proto3";
+
+package pubg.globalaccounts;
+option go_package = "git.projectbro.com/isd/global-accounts/identity-service/rpc/identity";
+
+/* @exclude
+NOTICE:
+  Some messages have had fields removed causing the field numbers to not be sequential. This is not a problem, do not correct it!
+  For more information on how field numbers are used see: https://developers.google.com/protocol-buffers/docs/proto#assigning-field-numbers
+*/
+
+/*
+The Identity Service is the main RPC service for interacting with the Global Accounts/Identity system.
+
+We use <a href="https://developers.google.com/protocol-buffers">Protocol Buffers</a> to define the API and then generate client and server stubs. If you're writing your service in Golang or Typescript you can ask us for a client library. For other languages the server also accepts JSON requests so you can use whatever HTTP request library you prefer.
+
+When making JSON requests over HTTP you'll make requests like:
+<code>
+curl --location --request POST 'https://{base_url}/twirp/pubg.globalaccounts.Identity/GetGlobalAccount' \ <br>--header 'Authorization: Bearer {token}' \ <br>--header 'Content-Type: application/json' \<br>--data-raw '{"Criteria":"globalaccount.723f1e42-4347-4760-9460-c259d111a5f4", "CriteriaType": "guid"}'
+</code>
+
+<b>NOTE: All requests will be made with the POST verb</b>
+
+Endpoints will only ever respond with a 200 or 500 status code. Keep in mind 200 doesn't always mean success; depending on the endpoint you're hitting the response object may contain a "code" field that will indicate success (200) or a specific error (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum).
+*/
+service Identity {
+    /*
+    Creates a new Local Authentication record. Usually this triggers an Activation email to be sent to the user.
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrTOSNotAccepted
+    - ErrInvalidDOB
+    - ErrInvalidUsername
+    - ErrInvalidCountry
+    - ErrUsernameTaken
+    - ErrEmailDomainNotWhitelisted
+    - ErrAccountAlreadyExists
+    - ErrAccountByGUIDNotFound
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc CreateGlobalAccount (CreateAccountParams) returns (GlobalAccountResponse);
+    /*
+    Removes all of an account's records from the database. This CANNOT be undone.
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrAccountByGUIDNotFound
+    - ErrCouldnotConvertAuth
+    - ErrCouldNotDeleteAccount
+    - ErrInvalidPassword
+    - ErrInvalidPasswordConfirm
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc DeleteGlobalAccount (DeleteAccountParams) returns (StatusResponse);
+    /*
+    Retrieve all information about a Global Account
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrAccountByProviderIDNotFound
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc GetGlobalAccount (CriteriaQuery) returns (GlobalAccountResponse);
+    /*
+    When an account is created we usually send an email to the user asking them to verify their email and activate their account.
+    That email contains a JWT that must be sent to this endpoint to complete activation of the account.
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrAccountByGUIDNotFound
+    - ErrInvalidActivationToken
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc ActivateGlobalAccount (ActivateAccountParams) returns (TokenClaimResponse);
+    /*
+    If a user did not receive their activation email, or it expired before they used it, this endpoint will trigger a new JWT to be generated and sent to the user.
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrAccountByGUIDNotFound
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc ResendActivation (ResendActivationParams) returns (StatusResponse);
+    /*
+    Changing the email address of an account is a two-step process. This is to ensure that the user has access to the new email address before we change the account information. When an email change is requested this is the first endpoint that should be hit. That will trigger a JWT to be generated and sent to the NewEmail. Once the user has the JWT from their new email it needs to be sent to `CompleteEmailChange` endpoint to save the new email address to the account.
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrAccountByGUIDNotFound
+    - ErrEmailChangeNewEmailSameAsOld
+    - ErrFailedEmailValidation
+    - ErrIncorrectPassword
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc BeginEmailChange (BeginEmailChangeParams) returns (StatusResponse);
+    /*
+    This takes the JWT generated by BeginEmailChange, verifies its authenticity, and then saves the new email address to the user's account.
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrAccountByGUIDNotFound
+    - ErrEmailChangeInvalidToken
+    - ErrEmailChangeNewEmailAlreadyRegistered
+    - ErrEmailChangeNewEmailSameAsOld
+    - ErrEmailChangeOldEmailAlreadyChanged
+    - ErrFailedEmailValidation
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc CompleteEmailChange (CompleteEmailChangeParams) returns (TokenClaimResponse);
+    /*
+    This endpoint is used to set or update the username of an account.
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrAccountByGUIDNotFound
+    - ErrInvalidUsername
+    - ErrUsernameTaken
+    - ErrUsernameAlreadySet
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc UpdateUsername (UpdateUsernameParams) returns (StatusResponse);
+    /*
+    This endpoint is used to change the password of an account when the user remembers the old password. We confirm that the old password is correct, salt and hash the new password, and then save it to the account.
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrAccountByGUIDNotFound
+    - ErrInvalidPassword
+    - ErrInvalidPasswordConfirm
+    - ErrLocalAuthResetPasswordInvalidOldPassword
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc UpdatePassword (UpdatePasswordParams) returns (StatusResponse);
+    /*
+    When a user can't remember the password to access their account we generate a JWT and email it to the address on the account. The user must then send the JWT back to the `CompleteForgotPassword` endpoint to be able to change their password.
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrFailedEmailValidation
+    - ErrTooManyRequestByForgotPassword
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc BeginForgotPassword (BeginForgotPasswordParams) returns (StatusResponse);
+    /*
+    This takes the JWT generated by `BeginForgotPassword` and verifies it. If the verification is successful we salt and hash the new password and update their account.
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrAccountByGUIDNotFound
+    - ErrAccountOnHold
+    - ErrInvalidPassword
+    - ErrInvalidPasswordConfirm
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc CompleteForgotPassword (CompleteForgotPasswordParams) returns (TokenClaimResponse);
+    /*
+    This endpoint changes whether or not the user wants to receive email communications from PUBG.
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrAccountByGUIDNotFound
+    - ErrCouldnotConvertAuth
+    - ErrFailedUpdateEmailOptIn
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc SetCommPrefs (SetCommPrefsParams) returns (StatusResponse);
+    /*
+    This changes the platform that's used as the user's Persona platform. The Persona platform dictates what username we display when communicating with the player.
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrAccountByGUIDNotFound
+    - ErrCouldnotConvertAuth
+    - ErrFailedUpdatePersona
+    - ErrInvaildProvider
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc SetPersona (SetPersonaParams) returns (StatusResponse);
+    /*
+    Youtube linking is different than most of our other social links. We don't actually link with YT; they link with us. We use this method to save a record indicating that the user has linked with Youtube, but we have no information about their YouTube account.
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrAccountByGUIDNotFound
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc LinkYoutube (GuidInput) returns (StatusResponse);
+    /*
+    LitePC links contain no data about the user's LitePC account. We only use these links to track what users have access to LitePC.
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrAccountByGUIDNotFound
+    - ErrLitePCLauncherRegistrationDisabled
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc LinkLitePC (GuidInput) returns (StatusResponse);
+    /*
+    This is used to create a link record when a player logs in to Global Accounts through an OIDC Relying Partner.
+    These links are simply a record that the player logged in to the partner's system.
+    We do not receive any information about the player's account in the partner's system.
+
+     <b>Possible Error Codes:</b>
+    <pre>
+    - ErrAccountByGUIDNotFound
+    - ErrInvaildProvider
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc CreateRelyingPartyLink (CreateRelyingPartyLinkParams) returns (StatusResponse);
+    /*
+    This is used to create a link between a third-party account and a PUBG Global Account.
+
+    Youtube and LitePC should not be linked with this endpoint. (See <a href="#pubg.globalaccounts.Identity.LinkLitePC">LinkLitePC</a> and <a href="pubg.globalaccounts.Identity.LinkYoutube">LinkYoutube</a>)
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrAccountAlreadyLinked
+    - ErrAccountRecentlyUnlinked
+    - ErrFailedCreateLink
+    - ErrFailedDeleteLink
+    - ErrTSLProxyRequestFail
+    - ErrTSLPlatformAccountEmptyResponse
+    - ErrTSLPlatformAccountSummaryNotFound
+    - ErrTSLPlatformAccountSummaryMissingData
+    - ErrTSLPlatformAccountUnmarshalFail
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc CreateLink (CreateLinkParams) returns (StatusResponse);
+    /*
+    This is used to deactivate a link between a third-party account and a PUBG account. Destroyed links are not actually deleted, they're "deactivated". This leaves the record in the database for tracking purposes but the deactivated account will be omitted from Global Account lookups.
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrAccountDeactivated
+    - ErrAccountByGUIDNotFound
+    - ErrAccountAlreadyLinked
+    - ErrProviderLocked
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc DestroyLink (DestroyLinkParams) returns (StatusResponse);
+    /*
+    This is used to determine whether a PUBG Global Account is linked to a third-party platform. This does not return information about the linked platform account, only whether or not the link is active.
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrAccountByGUIDNotFound
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc CheckLink (GuidProviderCombo) returns (StatusResponse);
+    /*
+    This returns information about a specific third-party account linked to a PUBG Global Account.
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrAccountByGUIDNotFound
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc GetLink (GuidProviderCombo) returns (GetLinkResponse);
+    /*
+    This is the main endpoint used for logging in. We take an email address and plain-text password. The password is checked against the password stored on the account. If the passwords match we return the full Global Account object for that user and they can be considered logged in. If the password does not match what's stored on the account then no Account will be returned.
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrAccountLocked
+    - ErrAccountUnconfirmed
+    - ErrTooManyRequestByIp
+    - ErrTooManyRequestByLogin
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc VerifyPassword (VerifyPasswordParams) returns (GlobalAccountResponse);
+    /*
+    Returns information about the last Twitch account linked to the specified Global Account.
+    This endpoint is generally not useful and only exists to support TSL.
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrProviderAccountNotFound
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc GetPrevTwitch (GetPrevTwitchParams) returns (PrevTwitchResponse);
+    /*
+    <div class="not-ready"><b>This endpoint is not ready for general use</b></div>
+    */
+	rpc BeginEnableTOTP(GuidInput) returns (BeginEnableTOTPResponse);
+    /*
+    <div class="not-ready"><b>This endpoint is not ready for general use</b></div>
+    */
+	rpc CompleteEnableTOTP(CompleteEnableTOTPParams) returns (CompleteEnableTOTPResponse);
+    /*
+    <div class="not-ready"><b>This endpoint is not ready for general use</b></div>
+    */
+	rpc RegenerateRecoveryTOPTCodes(GuidInput) returns (StatusResponse);
+    /*
+    <div class="not-ready"><b>This endpoint is not ready for general use</b></div>
+    */
+	rpc SendTOTPCode(GuidInput) returns (StatusResponse);
+    /*
+    <div class="not-ready"><b>This endpoint is not ready for general use</b></div>
+    */
+	rpc VerifyTOTPCode(VerifyTOTPCodeParams) returns (StatusResponse);
+    /*
+    When a user unlinks a provider from their PUBG Global Account there's a delay before they're allowed to link a different account from that same provider. This endpoint can be used to check whether or not a user is able to link a specific provider at this time.
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrAccountRecentlyUnlinked
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc CheckGUIDLinkDelay(GuidProviderCombo) returns (StatusResponse);
+
+    rpc SocialLoginLookup(SocialLoginParams) returns (GlobalAccountResponse);
+    /*
+    Set a user's Preferred Language.
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrAccountByGUIDNotFound
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc SetPrefLang(PreferredLangParams) returns (StatusResponse);
+
+    // ErrMagicLinkCodeInvalid
+    rpc MagicLinkGenerate (MagicLinkGenerateParams) returns (MagicLinkGenerateResponse);
+    rpc MagicLinkValidate (MagicLinkCodeParams) returns (MagicLinkValidateResponse);
+    rpc MagicLinkCheckComplete (MagicLinkCodeParams) returns (MagicLinkCheckCompleteResponse);
+
+    /*
+    Updates the creator code attached to a global account.
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrAccountByGUIDNotFound
+    - ErrNoPlatformsLinked
+    - ErrInvalidCreatorCode
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc UpdateCreatorCode(UpdateCreatorCodeParams) returns (StatusResponse);
+    /*
+    Gets a list of creator codes in order to populate UI elements
+    */
+    rpc GetCreatorCodes(GetCreatorCodesParams) returns (CodesResponse);
+    /*
+    Gets list of access logs and actived access logs to populate UI elements
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrCouldNotGetIpLogs
+    - ErrCouldNotGetSessionLogs
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc GetAccessLogs(GuidInput) returns (AccessLogResponse);
+    /*
+    Gets a list of ongoing promotions
+    */
+    rpc GetPromotions(GetPromotionsParams) returns (PromotionsResponse);
+    /*
+    Claims a promo code for a given account and promotion
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - ErrAccountByGUIDNotFound
+    - ErrCreatorCodeRequired
+    - ErrPromotionNotFound
+    - ErrPromotionNotActive
+    - ErrPromotionNoCodesAvailable
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc ClaimPromoCode(ClaimPromoCodeParams) returns (StatusResponse);
+}
+
+////////////////////////
+// Request Parameters //
+////////////////////////
+
+message UserData {
+    /*
+    The IP address of the player that the request is about.
+    This must be the IP of the end-user, not a server IP, because rate limiting is based off this value.
+    */
+    string IP = 1;
+    // The language-code the user expects to receive emails in. Defaults to English if not present.
+    string Locale = 2;
+    // The relaying being used making a log
+    string Relying = 3;
+    // The Meta contained addtional information like userAgent to store on ip log tables
+    map<string, string> Meta = 4;
+}
+
+message CreateAccountParams {
+    // EmailConfirmation was previously field 3. Field 3 cannot be re-used to ensure backwards compatibility.
+    reserved 3;
+
+    // Information about the end-user the request is for. Used for rate limiting and email translation
+    UserData User = 1;
+    // The email address used to identify the new account
+    string Email = 2;
+    // The user's password in plaintext. Will be hashed/salted server-side
+    string Password = 4;
+    // Confirmation of the user's password. Must match the Password field
+    string PasswordConfirmation = 5;
+    // The user's Date of Birth in Epoch time
+    int64 DateOfBirth = 6;
+    // The IATA country code where the user resides
+    string Country = 7;
+    // Whether or not the user has consented to receiving emails from us
+    bool EmailOptIn = 8;
+    // Whether or not the user has agreed to the Terms of Service/Privacy Policy
+    bool TosAccepted = 9;
+    // Optional: The ClientID of the OIDC client creating this account
+    string ClientID = 10;
+    // Optional: Information about additional authentication providers to link the new account to
+    AuthLinkInfo LinkInfo = 12;
+    // Optional: A/B test state. On or off.
+    string ActivateTest = 13;
+    // The username that the user has chosen for the account
+    string Username = 14;
+}
+
+message AuthLinkInfo {
+    // Indicates which of the LinkInfo fields is filled out
+    string Provider = 1;
+    // Facebook account info
+    FacebookLinkInfo Facebook = 3;
+    // Google  account info
+    GoogleLinkInfo Google = 4;
+    // Line account info
+    LineLinkInfo Line = 5;
+    // Playstation account info
+    PlaystationLinkInfo Playstation = 6;
+    // Steam account info
+    SteamLinkInfo Steam = 7;
+    // Twitch account info
+    TwitchLinkInfo Twitch = 8;
+    // Twitter account info
+    TwitterLinkInfo Twitter = 9;
+    // VK account info
+    VKLinkInfo VK = 10;
+    // XBox account info
+    XboxLinkInfo Xbox = 11;
+    // Stadia account info
+    StadiaLinkInfo Stadia = 12;
+    // Discord account info
+    DiscordLinkInfo Discord = 13;
+    // Reddit account info
+    RedditLinkInfo Reddit = 14;
+}
+
+message FacebookLinkInfo {
+    // Facebook Account ID
+    string ID = 1;
+    // Facebook display name
+    string DisplayName = 2;
+    // Facebook OIDC Access token
+    string AccessToken = 3;
+    // Facebook account email address
+    string Email = 4;
+}
+
+message GoogleLinkInfo {
+    // Google account ID
+    string ID = 1;
+    // Google account display name
+    string DisplayName = 2;
+    // Google OIDC Access Token
+    string AccessToken = 3;
+    // Google OIDC Refresh Token
+    string RefreshToken = 4;
+    // Google account email address
+    string Email = 5;
+}
+
+message LineLinkInfo {
+    // Line Account ID
+    string ID = 1;
+    // Line display name
+    string DisplayName = 2;
+    // Line OIDC Access Token
+    string AccessToken = 3;
+    // Line OIDC Refresh Token
+    string RefreshToken = 4;
+    // Line account email address
+    string Email = 5;
+}
+
+message PlaystationLinkInfo {
+    // Playstation Account ID
+    string AccountID = 1;
+    // Playstation display name
+    string DisplayName = 2;
+    // Playstation OIDC Access token
+    string AccessToken = 3;
+    // User's age reported by Playstation
+    int32 Age = 4;
+    // TODO
+    string CommunityDomain = 5;
+    // User's Date of Birth reported by Playstation
+    string DateOfBirth = 6;
+    // User's language reported by Playstation
+    string Language = 7;
+    // Parental controls enabled on this Playstation account
+    PSNParentalControl ParentalControl = 8;
+    // Playstation account region
+    string Region = 9;
+    // Whether or not this account is a sub-account of another PSN account.
+    bool IsSubAccount = 10;
+}
+
+// The parental controls configured for this Playstation account.
+message PSNParentalControl {
+    // "This control blocks a Sub Account from using text chat, voice chat, video chat, and other messaging features". More info on the <a href="https://www.playstation.com/en-us/network/legal/ratings/">Playstation Legal Doc</a>
+    bool RestrictChat = 1;
+    // "This parental control blocks a Sub Account from posting or viewing user-generated content". More info on the <a href="https://www.playstation.com/en-us/network/legal/ratings/">Playstation Legal Doc</a>
+    bool RestrictUGM = 2;
+    // "This setting allows a Master Account holder to A) prevent a Sub Account from buying game content through PSN that not intended for his/her age according to the ESRB rating system and B) prevent a Sub Account from playing software content on PSN that is not intended for his age according to the ESRB rating system.". More info on the <a href="https://www.playstation.com/en-us/network/legal/ratings/">Playstation Legal Doc</a>
+    bool RestrictStoreContent = 3;
+}
+
+message RedditLinkInfo {
+    // Reddit Account ID
+    string ID = 1;
+    // Reddit display name
+    string DisplayName = 2;
+    // Reddit OIDC Access token
+    string AccessToken = 3;
+    // Reddit OIDC Refresh token
+    string RefreshToken = 4;
+}
+
+message StadiaLinkInfo {
+    // Stadia player ID
+    string ID = 1;
+    // Stadia display name
+    string DisplayName = 2;
+}
+
+message SteamLinkInfo {
+    // Steam account ID
+    string ID = 1;
+    // Steam display name
+    string DisplayName = 2;
+    // Steam profile picture
+    repeated SteamPhoto Photos = 3;
+}
+
+message SteamPhoto {
+    // Link to a profile picture
+    string Value = 1;
+}
+
+message TwitchLinkInfo {
+    // Twitch account ID
+    string ID = 1;
+    // Twitch display name
+    string DisplayName = 2;
+    // Twitch OIDC Access Token
+    string AccessToken = 3;
+    // Twitch OIDC Refresh Token
+    string RefreshToken = 4;
+    // Twitch account email address
+    string Email = 5;
+    // Twitch account username
+    string Username = 6;
+}
+
+message TwitterLinkInfo {
+    // Twitter Account ID
+    string ID = 1;
+    // Twitter display name
+    string DisplayName = 2;
+    // Twitter OIDC Access Token
+    string AccessToken = 3;
+    // Twitter account email
+    string Email = 4;
+}
+
+message VKLinkInfo {
+    // VK Account ID
+    string ID = 1;
+    // VK Display name
+    string DisplayName = 2;
+    // VK OIDC Access Token
+    string AccessToken = 3;
+    // VK account email address
+    string Email = 4;
+}
+
+message XboxLinkInfo {
+    // XBox account ID
+    string XUID = 1;
+    // XBox display name
+    string DisplayName = 2;
+    // Xbox OIDC Access token
+    string AccessToken = 3;
+    // Xbox OIDC Refresh Token
+    string RefreshToken = 4;
+    // When the XBox OIDC tokens expire
+    int64 ValidUntil = 5;
+}
+
+message DiscordLinkInfo {
+    // Discord user ID
+    string ID = 1;
+    // Discord Username
+    string Username = 2;
+    // Discord unique identifier (like #1234)
+    string Discriminator = 3;
+    // User's email address
+    string Email = 4;
+    // Whether or not the user's email has been verified.
+    bool Verified = 5;
+    // Whether or not this account is a bot.
+    bool Bot = 6;
+    // Discord OIDC Access Token
+    string AccessToken = 7;
+    // Discord OIDC Refresh Token
+    string RefreshToken = 8;
+    // When the Discord OIDC Access Token expires
+    int64 ExpiresIn = 9;
+    // Identifier for the user's Avatar. Use this with Discord's CDN to retrieve the avatar image. For more info see https://discord.com/developers/docs/reference#image-formatting
+    string AvatarHash = 10;
+    // Premium types den9te the level of premium a user has.
+    int64 PremiumType = 11;
+    // Special information about this account, such as if it's a Discord employee, a bot, etc.
+    int64 Flags = 12;
+    // Same as Flags, but only lists flags displayed to the public.
+    int64 PublicFlags = 13;
+}
+
+message DeleteAccountParams {
+    // Information about the end-user the request is for. Used for rate limiting and email translation.
+    UserData User = 1;
+    // The Global Account ID of the account to be deleted.
+    string GUID = 2;
+    // The user's password, used to confirm access to the account before deletion.
+    string Password = 3;
+}
+
+message ResendActivationParams {
+    // Information about the end-user the request is for. Used for rate limiting and email translation.
+    UserData User = 1;
+    // A Global Account ID
+    string GUID = 2;
+    // Optional: OIDC Client ID of the service making the request.
+    string ClientID = 3;
+    // Optional: A/B test state. On or off.
+    string ActivateTest = 4;
+}
+
+message GuidInput {
+    // Information about the end-user the request is for. Used for rate limiting and email translation.
+    UserData User = 1;
+    // A Global Account ID
+    string GUID = 2;
+    // Optional: OIDC Client ID of the service making the request.
+    string ClientID = 3;
+}
+
+message GuidProviderCombo {
+    // A Global Account ID
+    string GUID = 1;
+    // The name of an Authentication Provider
+    string Provider = 2;
+}
+
+message DestroyLinkParams {
+    // Information about the end-user the request is for. Used for rate limiting and email translation.
+    UserData User = 1;
+    // The Global Account ID of the account to be unlinked.
+    string GUID = 2;
+    // The name of the Authentication Provider to unlink.
+    string Provider = 3;
+}
+
+message CriteriaQuery {
+    // The criteria you wish to search for
+    string Criteria = 1;
+    /*
+    Describes what part of the account Criteria is searching for.
+    Possible values:
+    - guid
+    - provider_id
+    */
+    string CriteriaType = 2;
+}
+
+message ActivateAccountParams {
+    // Information about the end-user the request is for. Used for rate limiting and email translation.
+    UserData User = 1;
+    // The JWT sent to the user's email to verify they have access to the email they signed up with.
+    string ActivationToken = 3;
+}
+
+message BeginEmailChangeParams {
+    // EmailConfirmation was previously field 4. Field 4 cannot be re-used to ensure backwards compatibility.
+    reserved 4;
+
+    // Information about the end-user the request is for. Used for rate limiting and email translation.
+    UserData User = 1;
+    // The Global Account ID of the account that's being updated.
+    string GUID = 2;
+    // The email address to change the account to.
+    string NewEmail = 3;
+    // The password for this account, used to confirm that the user has access to the account being changed.
+    string Password = 5;
+}
+
+message CompleteEmailChangeParams {
+    // Information about the end-user the request is for. Used for rate limiting and email translation.
+    UserData User = 1;
+    // The JWT that we sent to the user's new email to verify they have access to the email account.
+    string Token = 2;
+}
+
+message UpdateUsernameParams {
+    // Information about the end-user the request is for. Used for rate limiting and email translation.
+    UserData User = 1;
+    // The Global Account ID of the account that's being updated.
+    string GUID = 2;
+    // THe new username to be set.
+    string NewUsername = 3;
+}
+
+message UpdatePasswordParams {
+    // Information about the end-user the request is for. Used for rate limiting and email translation.
+    UserData User = 1;
+    // The Global Account ID of the account that's being updated.
+    string GUID = 2;
+    // The password originally set on the account. Used to confirm that the user has access to the account being changed.
+    string OldPass = 3;
+    // The new password to set, in plaintext. Will be hashed/salted server-side.
+    string NewPass = 4;
+    // Confirmation of the new password. Must match the NewPass field.
+    string PassConf = 5;
+}
+
+message BeginForgotPasswordParams {
+    // Information about the end-user the request is for. Used for rate limiting and email translation.
+    UserData User = 1;
+    // The email address of the account that we're recovering a password for. Not needed if GUID is used.
+    string Email = 2;
+    // The Global Account ID of the account that we're recovering a password for. Not needed if Email is used.
+    string GUID = 3;
+    // Optional: OIDC Client ID of the service making the request.
+    string ClientID = 4;
+}
+
+message CompleteForgotPasswordParams {
+    // Information about the end-user the request is for. Used for rate limiting and email translation.
+    UserData User = 1;
+    // The JWT that we emailed to the user to verify they have access to the account.
+    string ResetToken = 2;
+    // The new password to set, in plaintext. Will be hashed/salted server-side.
+    string NewPass = 3;
+    // Confirmation of the new password. Must match the NewPass field.
+    string PassConf = 4;
+}
+
+message SetCommPrefsParams {
+    // Information about the end-user the request is for. Used for rate limiting and email translation.
+    UserData User = 1;
+    // The Global Account ID of the account being updated.
+    string GUID = 2;
+    // Whether or not the user wishes to receive communications from PUBG.
+    bool EmailOptIn = 3;
+}
+
+message SetPersonaParams {
+    // The Global Account ID of the account being updated.
+    string GUID = 1;
+    // The platform selected as the user's Persona Platform.
+    string Platform = 2;
+}
+
+message CreateLinkParams {
+    // Information about the end-user the request is for. Used for rate limiting and email translation.
+    UserData User = 1;
+    // The Global Account ID of the account being linked.
+    string GUID = 2;
+    // Info about the third-party account being linked to the Global Account.
+    AuthLinkInfo LinkInfo = 3;
+    // A magic link code to use to lookup AuthLinkInfo for the magic linking flow.
+    string MagicLinkCode = 4;
+}
+
+message CreateRelyingPartyLinkParams {
+    // Information about the end-user the request is for. Used for rate limiting and email translation.
+    UserData User = 1;
+    // The name of the provider the record is for.
+    string Provider = 2;
+    // A Global Account ID
+    string GUID = 3;
+    // Optional: OIDC Client ID of the service making the request.
+    string ClientID = 4;
+}
+
+message VerifyPasswordParams {
+    // Information about the end-user the request is for. Used for rate limiting and email translation.
+    UserData User = 1;
+    // The email address being logged into.
+    string Email = 2;
+    // The password being used to log in to the account.
+    string Password = 3;
+}
+
+message GetPrevTwitchParams {
+    // Information about the end-user the request is for. Used for rate limiting and email translation.
+    UserData User = 1;
+    // A Global Account ID
+    string GUID = 2;
+}
+
+message CompleteEnableTOTPParams {
+    // The Global Account ID of the account enabling OTP.
+    string GUID = 1;
+    // The JWT we sent to the user's email address to verify ownership of the account.
+    string Code = 2;
+}
+
+message VerifyTOTPCodeParams {
+    // The Global Account ID of the account we're verifying the OTP code for.
+    string GUID = 1;
+    // The Password of the account.
+    string Password = 2;
+    // The OTP code generated on the client side that we'll check the validity of.
+    string Code = 3;
+}
+
+message SocialLoginParams {
+    // Information about the end-user the request is for. Used for rate limiting and email translation
+    UserData User = 1;
+    // The ProviderID used to look up Global account .
+    string ProviderID = 2;
+}
+
+message PreferredLangParams {
+    // Information about the end-user the request is for. Used for rate limiting and email translation
+    UserData User = 1;
+    // The Global Account ID this Auth record represents
+    string GUID = 2;
+    // User's preferred language
+    string Language = 3;
+}
+
+message MagicLinkGenerateParams {
+    // Information about the end-user the request is for. Used for rate limiting and email translation.
+    UserData User = 1;
+    // The provider name, for example steam/xbox/etc
+    string Provider = 2;
+    // The provider ID of the player, for example steamID
+    string ProviderID = 3;
+    // The provider display name
+    string DisplayName = 4;
+}
+
+message MagicLinkCodeParams {
+    // Information about the end-user the request is for. Used for rate limiting and email translation.
+    UserData User = 1;
+    // The magiclink code to validate
+    string LinkCode = 2;
+}
+
+message UpdateCreatorCodeParams {
+    // Information about the end-user the request is for. Used for rate limiting and email translation
+    UserData User = 1;
+    // The Global Account ID of the account we're updating the creator code for.
+    string GUID = 2;
+    // The creator code to attach to the account.
+    string CreatorCode = 3;
+}
+
+message GetCreatorCodesParams {}
+
+message GetPromotionsParams {}
+
+message ClaimPromoCodeParams {
+    // Information about the end-user the request is for. Used for rate limiting and email translation
+    UserData User = 1;
+    // The Global Account ID of the account we're claiming a code for.
+    string GUID = 2;
+    // The promotion ID of the promotion we're claiming a code for.
+    string PromotionID = 3;
+}
+
+//////////////////////
+// Response Objects //
+//////////////////////
+
+message StatusResponse {
+    /*
+    Indicates the outcome of the request.
+    Individual methods should document what values may be returned here.
+    See the "BackendErrCode" enum for all possible values.
+    */
+    BackendErrCode Code = 1;
+    // May contain a message about the response.
+    string Message = 2;
+    // Details of the error specified by the Code field.
+    string Error = 3;
+}
+
+message TokenClaimResponse {
+    /*
+    Indicates the outcome of the request.
+    Individual methods should document what values may be returned here.
+    See the "BackendErrCode" enum for all possible values.
+    */
+    BackendErrCode Code = 1;
+    // May contain a message about the response.
+    string Message = 2;
+    // Details of the error specified by the Code field.
+    string Error = 3;
+    // Data extracted from the JWT
+    map<string, string> TokenClaim = 4;
+}
+
+message GlobalAccountResponse {
+    /*
+    Indicates the outcome of the request.
+    Individual methods should document what values may be returned here.
+    See the "BackendErrCode" enum for all possible values.
+    */
+    BackendErrCode Code = 1;
+    // May contain a message about the response.
+    string Message = 2;
+    // Details about the account that was requested, if found.
+    GlobalAccount Account = 3;
+}
+
+message GetLinkResponse {
+    /*
+    Indicates the outcome of the request.
+    Individual methods should document what values may be returned here.
+    See the "BackendErrCode" enum for all possible values.
+    */
+    BackendErrCode Code = 1;
+    // May contain a message about the response.
+    string Message = 2;
+    // Details about the linked account requested, if found.
+    AuthenticationData Link = 3;
+}
+
+message PrevTwitchResponse {
+    /*
+    Indicates the outcome of the request.
+    Individual methods should document what values may be returned here.
+    See the "BackendErrCode" enum for all possible values.
+    */
+    BackendErrCode Code = 1;
+    // May contain a message about the response.
+    string Message = 2;
+    // Details about the previously linked Twitch account.
+    PrevTwitch Data = 3;
+}
+
+message BeginEnableTOTPResponse {
+    /*
+    Indicates the outcome of the request.
+    Individual methods should document what values may be returned here.
+    See the "BackendErrCode" enum for all possible values.
+    */
+    BackendErrCode Code = 1;
+    // May contain a message about the response.
+    string Message = 2;
+    // QR-Code image (200x200 PNG) suitable for use by clients like Google-Authenticator to enroll the user in OTP.
+    bytes TOTPSetupImage = 3;
+}
+
+message CompleteEnableTOTPResponse {
+    /*
+    Indicates the outcome of the request.
+    Individual methods should document what values may be returned here.
+    See the "BackendErrCode" enum for all possible values.
+    */
+    BackendErrCode Code = 1;
+    // May contain a message about the response.
+    string Message = 2;
+    // Indicates the result of the operation.
+    bool Result = 3;
+}
+
+message MagicLinkGenerateResponse {
+    // The magiclink code to validate
+    string LinkCode = 1;
+    /*
+    Indicates the outcome of the request.
+    Individual methods should document what values may be returned here.
+    See the "BackendErrCode" enum for all possible values.
+    */
+    BackendErrCode Code = 3;
+    // May contain a message about the response.
+    string Message = 4;
+}
+
+message MagicLinkValidateResponse {
+    // The provider name, for example steam/xbox/etc
+    string Provider = 1;
+    // The provider ID of the player, for example steamID
+    string ProviderID = 2;
+    /*
+    Indicates the outcome of the request.
+    Individual methods should document what values may be returned here.
+    See the "BackendErrCode" enum for all possible values.
+    */
+    BackendErrCode Code = 3;
+    // May contain a message about the response.
+    string Message = 4;
+    // The provider display name
+    string DisplayName = 5;
+}
+
+message MagicLinkCheckCompleteResponse {
+    // The linked Global Account GUID
+    string GUID = 1;
+    /*
+    Indicates the outcome of the request.
+    Individual methods should document what values may be returned here.
+    See the "BackendErrCode" enum for all possible values.
+    */
+    BackendErrCode Code = 3;
+    // May contain a message about the response.
+    string Message = 4;
+}
+
+message CodesResponse {
+    /*
+    Indicates the outcome of the request.
+    Individual methods should document what values may be returned here.
+    See the "BackendErrCode" enum for all possible values.
+    */
+    BackendErrCode Code = 1;
+    // May contain a message about the response.
+    string Message = 2;
+    // List of creator codes.
+    repeated string CreatorCodes = 3;
+    // List of creator names.
+    repeated string CreatorNames = 4;
+
+}
+
+message PromotionsResponse {
+    /*
+    Indicates the outcome of the request.
+    Individual methods should document what values may be returned here.
+    See the "BackendErrCode" enum for all possible values.
+    */
+    BackendErrCode Code = 1;
+    // May contain a message about the response.
+    string Message = 2;
+    // List of promotions.
+    repeated PromotionInfo Promotions = 3;
+}
+
+message GlobalAccount {
+    // The Global Account ID of this account.
+    string GUID = 1;
+    // The username of the selected persona platform, or the user's email address.
+    string Username = 2;
+    // The authentication provider that the Username field is from.
+    string PersonaPlatform = 3;
+    // Whether or not this account's email has been confirmed.
+    bool Activated = 4;
+    // Whether or not the user wants to receive emails from PUBG.
+    bool EmailOptIn = 5;
+    // All third-party accounts that are linked to this Global Account.
+    AuthenticationData Authentications = 6;
+    // PUBG Platform accounts linked to this GlobalAccount.
+    map<string, PlatformAccount> Platforms = 7;
+    // Profile information for this GlobalAccount.
+    Profile Profile = 8;
+}
+
+message AuthenticationData {
+    LocalAuth local = 1;
+    TwitchAuth twitch = 2;
+    FacebookAuth facebook = 3;
+    LitePCAuth litepc = 4;
+    GoogleAuth google = 5;
+    LineAuth line = 6;
+    TwitterAuth twitter = 7;
+    PlaystationAuth psn = 8;
+    SteamAuth steam = 9;
+    XboxAuth xbox = 10;
+    VkAuth vk = 11;
+    YoutubeAuth youtube = 12;
+    StadiaAuth stadia = 13;
+    DiscordAuth discord = 14;
+    RedditAuth reddit = 15;
+    AfreecaTVAuth afreecatv = 16;
+}
+
+/*
+The LocalAuthentication record is the main record for a Global Account. Every Global Account has a Local Authentication record.
+*/
+message LocalAuth {
+    // The Global Account ID this Local Auth record represents
+    string GUID = 1;
+    // The Email Address of the Local auth.
+    string DisplayName = 2;
+    // Whether or not this record is active.
+    bool Deactivated = 3;
+    // Whether or not this account's email address has been verified.
+    bool Confirmed = 4;
+    // The IATA country code where this user resides.
+    // string Country = 5;
+    // The user's Date of Birth, as Epoch time.
+    // int64 DateOfBirth = 6;
+    // The user's Email address.
+    string Email = 7;
+    // Whether or not the user would like to receive email communications from PUBG.
+    // bool EmailOptIn = 8;
+    /*
+    Which platform should be used as the Global Account's Persona platform.
+    This determines how we address the user in email communications.
+    */
+    // string Persona = 9;
+    /*
+    Whether or not this account is Locked.
+    An account that fails to login too many times will be locked.
+    Resetting the password clears the lock on the account.
+    */
+    bool Locked = 10;
+    // Whether or not Player Services has place this account On Hold.
+    bool OnHold = 11;
+    // Whether or not this player accepted our Terms of Service/Privacy Policy.
+    // bool ToSAccepted = 12;
+    // When the user last updated their EmailOptIn selection, as Epoch time.
+    // int64 EmailOptInUpdatedAt = 13;
+    // When the Local Auth was created, as Epoch time.
+    int64 CreatedAt = 14;
+    // When the Local Auth was last updated, as Epoch time.
+    int64 UpdatedAt = 15;
+    // The Provider ID used to look up this Authentication record.
+    string ProviderID = 16;
+    // It shows preffered language, when user select language manually
+    // string PreferredLanguage = 17;
+    // The username of the local auth.
+    // string Username = 18;
+    // Information for the creator this account is supporting
+    // CreatorInfo CreatorInfo = 19;
+    // Promo codes claimed by this account
+    // map<string, string> PromoCodes = 20;
+
+}
+
+message TwitchAuth {
+    // The Global Account ID this Auth record represents.
+    string GUID = 1;
+    // The user's Twitch Display Name.
+    string DisplayName = 2;
+    // Whether or not this link is active.
+    bool Deactivated = 3;
+    // Set to True if the Access Token/Refresh Token pair are no longer valid.
+    bool BadCredentials = 4;
+    // The email address associated with the Twitch account.
+    string Email = 5;
+    // The ID of the Twitch account.
+    string TwitchID = 6;
+    // The user's Twitch Display Name.
+    string Username = 7;
+    // The OIDC Access Token for this account.
+    string AccessToken = 8;
+    // When the Local Auth was created, as Epoch time.
+    int64 CreatedAt = 9;
+    // When the Local Auth was last updated, as Epoch time.
+    int64 UpdatedAt = 10;
+    // The Provider ID used to look up this Authentication record.
+    string ProviderID = 11;
+}
+
+message FacebookAuth {
+    // The Global Account ID this Auth record represents
+    string GUID = 1;
+    // The Display Name of this Facebook account.
+    string DisplayName = 2;
+    // Whether or not this link is active.
+    bool Deactivated = 3;
+    // The email address associated with this Facebook account.
+    string Email = 4;
+    // The ID of the Facebook account.
+    string FacebookID = 5;
+    // When the Local Auth was created, as Epoch time.
+    int64 CreatedAt = 6;
+    // When the Local Auth was last updated, as Epoch time.
+    int64 UpdatedAt = 7;
+    // The Provider ID used to look up this Authentication record.
+    string ProviderID = 8;
+}
+
+message LitePCAuth {
+    // The Global Account ID this Auth record represents
+    string GUID = 1;
+    // The Provider ID used to look up this Authentication record.
+    string ProviderID = 2;
+    // Whether or not this link is active.
+    bool Deactivated = 3;
+    // When the Local Auth was created, as Epoch time.
+    int64 CreatedAt = 4;
+    // When the Local Auth was last updated, as Epoch time.
+    int64 UpdatedAt = 5;
+}
+
+message YoutubeAuth {
+    // The Global Account ID this Auth record represents
+    string GUID = 1;
+    // The Provider ID used to look up this Authentication record.
+    string ProviderID = 2;
+    // Whether or not this link is active.
+    bool Deactivated = 3;
+    // When the Local Auth was created, as Epoch time.
+    int64 CreatedAt = 4;
+    // When the Local Auth was last updated, as Epoch time.
+    int64 UpdatedAt = 5;
+}
+
+message AfreecaTVAuth {
+    // The Global Account ID this Auth record represents
+    string GUID = 1;
+    // The Provider ID used to look up this Authentication record.
+    string ProviderID = 2;
+    // Whether or not this link is active.
+    bool Deactivated = 3;
+    // When the Local Auth was created, as Epoch time.
+    int64 CreatedAt = 4;
+    // When the Local Auth was last updated, as Epoch time.
+    int64 UpdatedAt = 5;
+}
+
+message GoogleAuth {
+    // The Global Account ID this Auth record represents
+    string GUID = 1;
+    // Whether or not this link is active.
+    string DisplayName = 2;
+    // Whether or not this link is active.
+    bool Deactivated = 3;
+    // The Email associated with this Google account
+    string Email = 4;
+    // The ID of the Google account.
+    string GoogleID = 5;
+    // When the Local Auth was created, as Epoch time.
+    int64 CreatedAt = 6;
+    // When the Local Auth was last updated, as Epoch time.
+    int64 UpdatedAt = 7;
+    // The Provider ID used to look up this Authentication record.
+    string ProviderID = 8;
+}
+
+message LineAuth {
+    // The Global Account ID this Auth record represents
+    string GUID = 1;
+    // Whether or not this link is active.
+    string DisplayName = 2;
+    // Whether or not this link is active.
+    bool Deactivated = 3;
+    // The Email address associated with this Line account.
+    string Email = 4;
+    // The ID of the Line account.
+    string LineID = 5;
+    // When the Local Auth was created, as Epoch time.
+    int64 CreatedAt = 6;
+    // When the Local Auth was last updated, as Epoch time.
+    int64 UpdatedAt = 7;
+    // The Provider ID used to look up this Authentication record.
+    string ProviderID = 8;
+}
+
+message TwitterAuth {
+    // The Global Account ID this Auth record represents
+    string GUID = 1;
+    // Whether or not this link is active.
+    string DisplayName = 2;
+    // Whether or not this link is active.
+    bool Deactivated = 3;
+    // The Email Address associated with this Twitter account.
+    string Email = 4;
+    // The ID of this Twitter account.
+    string TwitterID = 5;
+    // When the Local Auth was created, as Epoch time.
+    int64 CreatedAt = 6;
+    // When the Local Auth was last updated, as Epoch time.
+    int64 UpdatedAt = 7;
+    // The Provider ID used to look up this Authentication record.
+    string ProviderID = 8;
+}
+
+message PlaystationAuth {
+    // The Global Account ID this Auth record represents
+    string GUID = 1;
+    // The Display Name of this Playstation account.
+    string DisplayName = 2;
+    // Whether or not this link is active.
+    bool Deactivated = 3;
+    // TODO
+    string CommunityDomain = 4;
+    // The Date of Birth of the user as reported to Playstation
+    string DateOfBirth = 5;
+    // The age of the user as calculated by Playstation
+    int32 Age = 6;
+    // The language the user configured on their Playstation account
+    string Language = 7;
+    // The ID of this Playstation account.
+    string PSNID = 8;
+    // The Region of this Playstation account.
+    string PSNRegion = 9;
+    // Whether or not this account is a sub-account of another PSN account.
+    bool SubAccount = 10;
+    PSNParentalControl ParentalControl = 11;
+    // When the Local Auth was created, as Epoch time.
+    int64 CreatedAt = 12;
+    // When the Local Auth was last updated, as Epoch time.
+    int64 UpdatedAt = 13;
+    // The Provider ID used to look up this Authentication record.
+    string ProviderID = 14;
+}
+
+message RedditAuth {
+    // The Global Account ID this Auth record represents
+    string GUID = 1;
+    // The Display Name of this Reddit account.
+    string DisplayName = 2;
+    // Whether or not this link is active.
+    bool Deactivated = 3;
+    // The ID of this Reddit account.
+    string RedditID = 4;
+    // When the Local Auth was created, as Epoch time.
+    int64 CreatedAt = 5;
+    // When the Local Auth was last updated, as Epoch time.
+    int64 UpdatedAt = 6;
+    // The Provider ID used to look up this Authentication record.
+    string ProviderID = 7;
+}
+
+message StadiaAuth {
+    // The Global Account ID this Auth record represents
+    string GUID = 1;
+    // The Display Name of this Stadia account.
+    string DisplayName = 2;
+    // Whether of not this link is active.
+    bool Deactivated = 3;
+    // The ID of this Stadia account.
+    string StadiaID = 4;
+    // When the Local Auth was created, as Epoch time.
+    int64 CreatedAt = 5;
+    // When the Local Auth was last updated, as Epoch time.
+    int64 UpdatedAt = 6;
+    // The Provider ID used to look up this Authentication record.
+    string ProviderID = 7;
+
+}
+
+message SteamAuth {
+    // The Global Account ID this Auth record represents
+    string GUID = 1;
+    // The current Display Name of this Steam account.
+    string DisplayName = 2;
+    // Whether or not this link is active.
+    bool Deactivated = 3;
+    // The ID of this Steam account.
+    string SteamID = 4;
+    // When the Local Auth was created, as Epoch time.
+    int64 CreatedAt = 5;
+    // When the Local Auth was last updated, as Epoch time.
+    int64 UpdatedAt = 6;
+    // The Provider ID used to look up this Authentication record.
+    string ProviderID = 7;
+}
+
+message XboxAuth {
+    // The Global Account ID this Auth record represents
+    string GUID = 1;
+    // The Display Name of this XBox account.
+    string DisplayName = 2;
+    // Whether or not this link is active.
+    bool Deactivated = 3;
+    // The ID of this XBox account.
+    string XUID = 4;
+    // When the Local Auth was created, as Epoch time.
+    int64 CreatedAt = 5;
+    // When the Local Auth was last updated, as Epoch time.
+    int64 UpdatedAt = 6;
+    // The Provider ID used to look up this Authentication record.
+    string ProviderID = 7;
+}
+
+message VkAuth {
+    // The Global Account ID this Auth record represents
+    string GUID = 1;
+    // The DisplayName of this VK account.
+    string DisplayName = 2;
+    // Whether or not this link is active.
+    bool Deactivated = 3;
+    // The Email address associated with this VK account.
+    string Email = 4;
+    // The ID of this VK account.
+    string VKID = 5;
+    // When the Local Auth was created, as Epoch time.
+    int64 CreatedAt = 6;
+    // When the Local Auth was last updated, as Epoch time.
+    int64 UpdatedAt = 7;
+    // The Provider ID used to look up this Authentication record.
+    string ProviderID = 8;
+}
+
+message DiscordAuth {
+    string GUID = 1;
+    // The Provider ID used to look up this Authentication record.
+    string ProviderID = 2;
+    // The account's Username, without the Discriminator code.
+    string DisplayName = 3;
+    // Whether or not this link is active.
+    bool Deactivated = 4;
+    // The Email address associated with this Discord account.
+    string Email = 5;
+    // The user's ID in Discord's identity system.
+    string DiscordID = 6;
+    // The user's discriminator, or hash code. In "Username#12345" the Discriminator is "12345".
+    string Discriminator = 7;
+    // When the Discord Auth was created, as Epoch time.
+    int64 CreatedAt = 8;
+    // When the Discord Auth was last updated, as Epoch time.
+    int64 UpdatedAt = 9;
+}
+
+message Profile {
+    // The Global Account ID this Profile record represents
+    string GUID = 1;
+    // The Provider ID for this Profile
+    string ProviderID = 2;
+    // The DisplayName for this Profile
+    string DisplayName = 3;
+    // THe IATA country code for this user profile
+    string Country = 4;
+    // The user's date of birth, as Epoch time.
+    int64 DateOfBirth = 5;
+    // The user's email address
+    string Email = 6;
+    // Whether or not the user would like to receive email communications from PUBG.
+    bool EmailOptIn = 7;
+    // Whether or not this player accepted out Terms of Service/Privacy Policy
+    bool ToSAccepted = 8;
+    // When the user last updated their EmailOptIn selection, as Epoch time
+    int64 EmailOptInUpdatedAt = 9;
+    // User's preferred language
+    string PreferredLanguage = 10;
+    // Username for this Profile
+    string Username = 11;
+    // When the profile was created, as Epoch time
+    int64 CreatedAt = 12;
+    // When the profile was last updated, as Epoch time
+    int64 UpdatedAt = 13;
+    // Information for the creator this account is supporting
+    CreatorInfo CreatorInfo = 14;
+    // Promo codes claimed by this profile
+    map<string, string> PromoCodes = 15;
+}
+
+message PrevTwitch {
+    // The Twitch ID that the account was last linked with.
+    string ID = 1;
+    // The Twitch Display Name of the Twitch Account that this Global Account was last linked to.
+    string DisplayName = 2;
+}
+
+message CreatorInfo {
+    // Code used to support this creator
+    string CreatorCode = 1;
+    // Human-readable creator name
+    string CreatorName = 2;
+    // When this code was selected by the user, as Epoch time
+    int64 UpdatedAt = 3;
+}
+
+message AccessLog {
+    // SessionID is a key of session, it helps to clarify  this session data is for current user.
+    string SessionID = 1;
+    // Timestamp the access log was created
+    int64 Timestamp = 2;
+    // stored user's browser
+    string Browser = 3;
+    // stored user's os
+    string Os = 4;
+    // stored user's county code based on IP
+    string Country = 5;
+    // stored user's IP
+    string IP = 6;
+    // This data is current session or not
+    bool CurrentUser = 7;
+}
+
+message AccessLogResponse {
+    /*
+    Indicates the outcome of the request.
+    Individual methods should document what values may be returned here.
+    See the "BackendErrCode" enum for all possible values.
+    */
+    BackendErrCode Code = 1;
+    // May contain a message about the response.
+    string Message = 2;
+    // list of AccessLog in session table
+    repeated AccessLog ActivedAccessLogs = 3;
+    // list of AccessLog in iplog table
+    repeated AccessLog AccessLogs = 4;
+}
+
+message PromotionInfo {
+    // Internal ID for the promotion
+    string PromotionID = 1;
+    // Name for the promotion
+    string Name = 2;
+    // Description of the promotion
+    string Description = 3;
+    // URL for image to be shown with promo info
+    string ImageURL = 4;
+    // URL for the external shop link
+    string LinkURL = 5;
+    // Number of unclaimed codes for the promotion
+    int64 Remaining = 6;
+    // Total number of codes for this promotion
+    int64 Total = 7;
+    // Start date for this promotion
+    int64 StartDate = 8;
+    // End date for this promotion
+    int64 EndDate = 9;
+    // Whether or not this promotion's codes were pregenerated
+    bool PreGeneratedCodes = 10;
+    // The type of promotion this is
+    string PromotionType = 11;
+    // Whether or not the UI should display the claimed code
+    bool ShowCode = 12;
+}
+
+///////////
+// Enums //
+///////////
+
+enum BackendErrCode {
+    // The GUID or ProviderID provided were not found.
+    ErrAccountByIDNotFound = 0;
+    // The GUID provided was not found.
+    ErrAccountByGUIDNotFound = 1;
+    // The Email address provided is not associated with a Global Account.
+    ErrAccountByEmailNotFound = 2;
+    // The ProviderID was not linked to a GlobalAccount.
+    ErrAccountByProviderIDNotFound = 3;
+    // The requested account is currently deactivated.
+    ErrAccountDeactivated = 4;
+    // The request account is already activated.
+    ErrAccountActivated = 5;
+    // The requested account is on hold by Player Services.
+    ErrAccountOnHold = 6;
+    // The OIDC Refresh Token for this account link is invalid.
+    ErrInvalidRefreshToken = 7;
+    // The Activation Token provided was not accepted by the server.
+    ErrInvalidActivationToken = 8;
+    // The email address provided is considered invalid by the server. NOTE: We do not allow registration with throwaway/temporary email providers.
+    ErrFailedEmailValidation = 9;
+    // The password provided was incorrect.
+    ErrLocalAuthResetPasswordInvalidOldPassword = 10;
+    // The password provided does not meet the password requirements.
+    ErrLocalAuthSetPasswordInvalidFormat = 11;
+    // An error occurred while deleting an account.
+    ErrCouldNotDeleteAccount = 12;
+    // An error occurred while updating the EmailOptIn status of the account.
+    ErrFailedUpdateEmailOptIn = 13;
+    // An error occurred while updating the Persona of the account.
+    ErrFailedUpdatePersona = 14;
+    // The Provider information was invalid.
+    ErrInvaildProvider = 15;
+    // An error occurred while attempting to linking accounts.
+    ErrFailedCreateLink = 16;
+    // An error occured while attempting to unlink accounts.
+    ErrFailedDeleteLink = 17;
+    // The server encountered a type error with the data in this account.
+    ErrCouldnotConvertAuth = 18;
+    // The domain of the email address is not whitelisted for registration.
+    ErrEmailDomainNotWhitelisted = 19;
+    // The user did not accept the TOS so we cannot complete registration.
+    ErrTOSNotAccepted = 20;
+    // The user's Date of Birth is not valid.
+    ErrInvalidDOB = 21;
+    // Legacy error code, not currently in use.
+    ErrInvalidEmailConfirm = 22;
+    // The password does not meet the password requirements.
+    ErrInvalidPassword = 23;
+    // The user's Password Confirmation did not match the provided Password.
+    ErrInvalidPasswordConfirm = 24;
+    // The account being created already exists.
+    ErrAccountAlreadyExists = 25;
+    // The password provided did not match the password saved on the specified account.
+    ErrIncorrectPassword = 26;
+    // The account being set to On Hold is already On Hold.
+    ErrAccountIsArealdyOnHolded = 27;
+    // An error occurred while setting an account to On Hold.
+    ErrFailedUpdateOnHold = 28;
+    // An error occurred while attempting to lock an account.
+    ErrFailedUpdateLocked = 29;
+    // The account is locked and cannot be modified.
+    ErrAccountLocked = 30;
+    // The account's email address has not been confirmed.
+    ErrAccountUnconfirmed = 31;
+    // The account being linked is already linked to this or another account.
+    ErrAccountAlreadyLinked = 32;
+    // Registrations originating from the LitePC launcher are currently disabled.
+    ErrLitePCLauncherRegistrationDisabled = 33;
+    // The information provided is not sufficient for creating an account link.
+    ErrInvalidLinkInfo = 34;
+    // The New and Old email addresses are the same.
+    ErrEmailChangeNewEmailSameAsOld = 35;
+    // The New email address is already registered to an account.
+    ErrEmailChangeNewEmailAlreadyRegistered = 36;
+    // The Old email address is no longer associated with the account.
+    ErrEmailChangeOldEmailAlreadyChanged = 37;
+    // The Email Change JWT provided was not accepted by the server.
+    ErrEmailChangeInvalidToken = 38;
+    // The Password Reset JWt provided was not accepted by the server.
+    ErrPasswordResetInvalidToken = 39;
+    // The information provided is not sufficient for creating an account link.
+    ErrLinkInfoMissing = 40;
+    // The Provider account specified was not found.
+    ErrProviderAccountNotFound = 41;
+    // The Identity server was unable to talk to TSL.
+    ErrTSLProxyRequestFail = 42;
+    // The Identity server encountered an error parsing the response from TSL.
+    ErrTSLPlatformAccountUnmarshalFail = 43;
+    // The Identity server received an empty response from TSL.
+    ErrTSLPlatformAccountEmptyResponse = 44;
+    // No TSL account found.
+    ErrTSLPlatformAccountSummaryNotFound = 45;
+    // TSL Account is missing information.
+    ErrTSLPlatformAccountSummaryMissingData = 46;
+    // When an account is unlinked we forbid linking a new account for a period of time to prevent abuse.
+    ErrAccountRecentlyUnlinked = 47;
+    // The IP address of the user is currently being rate limited.
+    ErrTooManyRequestByIp = 48;
+    // Logins to this account are currently being rate limited.
+    ErrTooManyRequestByLogin = 49;
+    // ForgotPassword requests for this account are currently being rate limited.
+    ErrTooManyRequestByForgotPassword = 50;
+    // Linking this provider requires that a TSL Platform is linked first. This account has no TSL platforms linked.
+    ErrNoPlatformsLinked = 51;
+    // The Username does not meet the username requirements
+    ErrInvalidUsername = 52;
+    // The Username is already in use
+    ErrUsernameTaken = 53;
+    // The requested username was not linked to an account
+    ErrAccountByUsernameNotFound = 54;
+    // The account already has a username set
+    ErrUsernameAlreadySet = 55;
+    // The Country Code is invalid
+    ErrInvalidCountry = 56;
+    // The provided magiclink code was invalid or expired
+    ErrMagicLinkCodeInvalid = 57;
+    // The provided magicLink code has not completed it's respective link
+    ErrMagicLinkNotComplete = 58;
+    // The given creator code is invalid.
+    ErrInvalidCreatorCode = 59;
+    // For certain Auth Providers you're only allowed to link a single Provider Account with your Global Account. You can deactivate your link, but you'll only be able to re-link with that same provider account. PS has the ability to unlock this provider by deactivating this link in ACPV.
+    ErrProviderLocked = 60;
+    // ChangeEmail requests for this account are currently being rate limited.
+    ErrTooManyRequestByChangeEmail = 61;
+    // occurs error at getting iplog
+    ErrCouldNotGetIpLogs = 62;
+    // occurs error at getting session table
+    ErrCouldNotGetSessionLogs = 63;
+    // Creator code link is required for this action.
+    ErrCreatorCodeRequired = 64;
+    // Promotion for given ID could not be found.
+    ErrPromotionNotFound = 65;
+    // Promotion is not active.
+    ErrPromotionNotActive = 66;
+    // Promotion has no more available codes.
+    ErrPromotionNoCodesAvailable = 67;
+    // Everything went to plan.
+    Success = 200;
+}
+
+// A PlatformAccount links a TSL Account ID to a GlobalAccount/Provider link.
+message PlatformAccount {
+    // The Global Account ID this link belongs to.
+    string GUID = 1;
+    // The user's TSL Username
+    string DisplayName = 2;
+    // The TSL Account ID.
+    string PlatformID = 3;
+    // The user's ID in the associated auth provider (XBox ID, PSN ID, etc.)
+    string AuthProviderID = 4;
+    // The time when this link was created, Epoch time.
+    int64 CreatedAt = 5;
+    // The time when this link was last updated, Epoch time.
+    int64 UpdatedAt = 6;
+}

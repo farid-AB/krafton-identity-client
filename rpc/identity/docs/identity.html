@@ -1,0 +1,6315 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<title>Identity Service Protocol Documentation</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic"/>
+	<style>
+		body {
+			width: 60em;
+			margin: 1em auto;
+			color: #222;
+			font-family: "Ubuntu", sans-serif;
+			padding-bottom: 4em;
+		}
+
+		h1 {
+			font-weight: normal;
+			border-bottom: 1px solid #aaa;
+			padding-bottom: 0.5ex;
+		}
+
+		h2 {
+			border-bottom: 1px solid #aaa;
+			padding-bottom: 0.5ex;
+			margin: 1.5em 0;
+		}
+
+		h3 {
+			font-weight: normal;
+			border-bottom: 1px solid #aaa;
+			padding-bottom: 0.5ex;
+		}
+
+		a {
+			text-decoration: none;
+			color: #567e25;
+		}
+
+		table {
+			width: 100%;
+			font-size: 80%;
+			border-collapse: collapse;
+		}
+
+		thead {
+			font-weight: 700;
+			background-color: #dcdcdc;
+		}
+
+		tbody tr:nth-child(even) {
+			background-color: #fbfbfb;
+		}
+
+		td {
+			border: 1px solid #ccc;
+			padding: 0.8ex 2ex;
+		}
+
+		td p {
+			margin: 0;
+		}
+
+		/* Table of fields */
+		.field-table td:nth-child(1) { /* Field */
+			width: 10em;
+		}
+		.field-table td:nth-child(2) { /* Type */
+			width: 10em;
+		}
+		.field-table td:nth-child(3) { /* Label */
+			width: 6em;
+		}
+		.field-table td:nth-child(4) { /* Description */
+			width: auto;
+		}
+
+		/* Table of extensions */
+		.extension-table td:nth-child(1) { /* Extension */
+			width: 10em;
+		}
+		.extension-table td:nth-child(2) { /* Type */
+			width: 10em;
+		}
+		.extension-table td:nth-child(3) { /* Base */
+			width: 10em;
+		}
+		.extension-table td:nth-child(4) { /* Number */
+			width: 5em;
+		}
+		.extension-table td:nth-child(5) { /* Description */
+			width: auto;
+		}
+
+		/* Table of enum values. */
+		.enum-table td:nth-child(1) { /* Name */
+			width: 10em;
+		}
+		.enum-table td:nth-child(2) { /* Number */
+			width: 10em;
+		}
+		.enum-table td:nth-child(3) { /* Description */
+			width: auto;
+		}
+
+		/* Table of scalar value types. */
+		.scalar-value-types-table tr {
+			height: 3em;
+		}
+
+		/* Table of contents. */
+		#toc-container ul {
+			list-style-type: none;
+			padding-left: 1em;
+			line-height: 180%;
+			margin: 0;
+		}
+		#toc > li > a {
+			font-weight: bold;
+		}
+
+		/* File heading div */
+		.file-heading {
+			width: 100%;
+			display: table;
+			border-bottom: 1px solid #aaa;
+			margin: 4em 0 1.5em 0;
+		}
+		.file-heading h2 {
+			border: none;
+			display: table-cell;
+		}
+		.file-heading a {
+			text-align: right;
+			display: table-cell;
+		}
+
+		/* The 'M', 'E' and 'X' badges in the ToC */
+		.badge {
+			width: 1.6em;
+			height: 1.6em;
+			display: inline-block;
+
+			line-height: 1.6em;
+			text-align: center;
+			font-weight: bold;
+			font-size: 60%;
+
+			color: #89ba48;
+			background-color: #dff0c8;
+
+			margin: 0.5ex 1em 0.5ex -1em;
+			border: 1px solid #fbfbfb;
+			border-radius: 1ex;
+		}
+
+		/* The 'SM' badge in the ToC for Service Methods */
+		.wide-badge {
+			width: 2.2em;
+			height: 1.6em;
+			display: inline-block;
+
+			line-height: 1.6em;
+			text-align: center;
+			font-weight: bold;
+			font-size: 60%;
+
+			color: #89ba48;
+			background-color: #dff0c8;
+
+			margin: 0.5ex 1em 0.5ex -1em;
+			border: 1px solid #fbfbfb;
+			border-radius: 1ex;
+		}
+
+		pre {
+			padding-left: 1.5em;
+		}
+
+		table.req-resp-desc tr {
+			height: 2em;
+		}
+		table.req-resp-desc td:nth-child(1) {
+			width: 20%;
+		}
+
+		p {
+			line-height: 1.3em;
+		}
+	</style>
+
+	<!-- User custom CSS -->
+	<link rel="stylesheet" type="text/css" href="stylesheet.css"/>
+</head>
+
+<body>
+
+<h1 id="title">Identity Service Protocol Documentation</h1>
+
+<h2>Table of Contents</h2>
+
+<div id="toc-container">
+	<ul id="toc">
+		
+			
+			<li>
+				<b>Services:</b>
+				<ul>
+					
+						
+						<li>
+							<a href="#pubg.globalaccounts.Identity"><span class="badge">S</span>Identity</a>
+							<ul>
+								
+									<li><a href="#pubg.globalaccounts.Identity.CreateGlobalAccount"><span class="wide-badge">SM</span>CreateGlobalAccount</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.DeleteGlobalAccount"><span class="wide-badge">SM</span>DeleteGlobalAccount</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.GetGlobalAccount"><span class="wide-badge">SM</span>GetGlobalAccount</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.ActivateGlobalAccount"><span class="wide-badge">SM</span>ActivateGlobalAccount</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.ResendActivation"><span class="wide-badge">SM</span>ResendActivation</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.BeginEmailChange"><span class="wide-badge">SM</span>BeginEmailChange</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.CompleteEmailChange"><span class="wide-badge">SM</span>CompleteEmailChange</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.UpdateUsername"><span class="wide-badge">SM</span>UpdateUsername</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.UpdatePassword"><span class="wide-badge">SM</span>UpdatePassword</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.BeginForgotPassword"><span class="wide-badge">SM</span>BeginForgotPassword</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.CompleteForgotPassword"><span class="wide-badge">SM</span>CompleteForgotPassword</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.SetCommPrefs"><span class="wide-badge">SM</span>SetCommPrefs</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.SetPersona"><span class="wide-badge">SM</span>SetPersona</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.LinkYoutube"><span class="wide-badge">SM</span>LinkYoutube</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.LinkLitePC"><span class="wide-badge">SM</span>LinkLitePC</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.CreateRelyingPartyLink"><span class="wide-badge">SM</span>CreateRelyingPartyLink</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.CreateLink"><span class="wide-badge">SM</span>CreateLink</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.DestroyLink"><span class="wide-badge">SM</span>DestroyLink</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.CheckLink"><span class="wide-badge">SM</span>CheckLink</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.GetLink"><span class="wide-badge">SM</span>GetLink</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.VerifyPassword"><span class="wide-badge">SM</span>VerifyPassword</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.GetPrevTwitch"><span class="wide-badge">SM</span>GetPrevTwitch</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.BeginEnableTOTP"><span class="wide-badge">SM</span>BeginEnableTOTP</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.CompleteEnableTOTP"><span class="wide-badge">SM</span>CompleteEnableTOTP</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.RegenerateRecoveryTOPTCodes"><span class="wide-badge">SM</span>RegenerateRecoveryTOPTCodes</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.SendTOTPCode"><span class="wide-badge">SM</span>SendTOTPCode</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.VerifyTOTPCode"><span class="wide-badge">SM</span>VerifyTOTPCode</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.CheckGUIDLinkDelay"><span class="wide-badge">SM</span>CheckGUIDLinkDelay</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.SocialLoginLookup"><span class="wide-badge">SM</span>SocialLoginLookup</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.SetPrefLang"><span class="wide-badge">SM</span>SetPrefLang</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.MagicLinkGenerate"><span class="wide-badge">SM</span>MagicLinkGenerate</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.MagicLinkValidate"><span class="wide-badge">SM</span>MagicLinkValidate</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.MagicLinkCheckComplete"><span class="wide-badge">SM</span>MagicLinkCheckComplete</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.UpdateCreatorCode"><span class="wide-badge">SM</span>UpdateCreatorCode</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.GetCreatorCodes"><span class="wide-badge">SM</span>GetCreatorCodes</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.GetAccessLogs"><span class="wide-badge">SM</span>GetAccessLogs</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.GetPromotions"><span class="wide-badge">SM</span>GetPromotions</a></li>
+								
+									<li><a href="#pubg.globalaccounts.Identity.ClaimPromoCode"><span class="wide-badge">SM</span>ClaimPromoCode</a></li>
+								
+							</ul>
+						</li>
+					
+				</ul>
+			</li>
+			<li>
+				<b>Messages:</b>
+				<ul>
+					
+					<li>
+						<a href="#pubg.globalaccounts.AccessLog"><span class="badge">M</span>AccessLog</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.AccessLogResponse"><span class="badge">M</span>AccessLogResponse</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.ActivateAccountParams"><span class="badge">M</span>ActivateAccountParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.AfreecaTVAuth"><span class="badge">M</span>AfreecaTVAuth</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.AuthLinkInfo"><span class="badge">M</span>AuthLinkInfo</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.AuthenticationData"><span class="badge">M</span>AuthenticationData</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.BeginEmailChangeParams"><span class="badge">M</span>BeginEmailChangeParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.BeginEnableTOTPResponse"><span class="badge">M</span>BeginEnableTOTPResponse</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.BeginForgotPasswordParams"><span class="badge">M</span>BeginForgotPasswordParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.ClaimPromoCodeParams"><span class="badge">M</span>ClaimPromoCodeParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.CodesResponse"><span class="badge">M</span>CodesResponse</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.CompleteEmailChangeParams"><span class="badge">M</span>CompleteEmailChangeParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.CompleteEnableTOTPParams"><span class="badge">M</span>CompleteEnableTOTPParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.CompleteEnableTOTPResponse"><span class="badge">M</span>CompleteEnableTOTPResponse</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.CompleteForgotPasswordParams"><span class="badge">M</span>CompleteForgotPasswordParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.CreateAccountParams"><span class="badge">M</span>CreateAccountParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.CreateLinkParams"><span class="badge">M</span>CreateLinkParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.CreateRelyingPartyLinkParams"><span class="badge">M</span>CreateRelyingPartyLinkParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.CreatorInfo"><span class="badge">M</span>CreatorInfo</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.CriteriaQuery"><span class="badge">M</span>CriteriaQuery</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.DeleteAccountParams"><span class="badge">M</span>DeleteAccountParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.DestroyLinkParams"><span class="badge">M</span>DestroyLinkParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.DiscordAuth"><span class="badge">M</span>DiscordAuth</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.DiscordLinkInfo"><span class="badge">M</span>DiscordLinkInfo</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.FacebookAuth"><span class="badge">M</span>FacebookAuth</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.FacebookLinkInfo"><span class="badge">M</span>FacebookLinkInfo</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.GetCreatorCodesParams"><span class="badge">M</span>GetCreatorCodesParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.GetLinkResponse"><span class="badge">M</span>GetLinkResponse</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.GetPrevTwitchParams"><span class="badge">M</span>GetPrevTwitchParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.GetPromotionsParams"><span class="badge">M</span>GetPromotionsParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.GlobalAccount"><span class="badge">M</span>GlobalAccount</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.GlobalAccount.PlatformsEntry"><span class="badge">M</span>GlobalAccount.PlatformsEntry</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.GlobalAccountResponse"><span class="badge">M</span>GlobalAccountResponse</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.GoogleAuth"><span class="badge">M</span>GoogleAuth</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.GoogleLinkInfo"><span class="badge">M</span>GoogleLinkInfo</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.GuidInput"><span class="badge">M</span>GuidInput</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.GuidProviderCombo"><span class="badge">M</span>GuidProviderCombo</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.LineAuth"><span class="badge">M</span>LineAuth</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.LineLinkInfo"><span class="badge">M</span>LineLinkInfo</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.LitePCAuth"><span class="badge">M</span>LitePCAuth</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.LocalAuth"><span class="badge">M</span>LocalAuth</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.MagicLinkCheckCompleteResponse"><span class="badge">M</span>MagicLinkCheckCompleteResponse</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.MagicLinkCodeParams"><span class="badge">M</span>MagicLinkCodeParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.MagicLinkGenerateParams"><span class="badge">M</span>MagicLinkGenerateParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.MagicLinkGenerateResponse"><span class="badge">M</span>MagicLinkGenerateResponse</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.MagicLinkValidateResponse"><span class="badge">M</span>MagicLinkValidateResponse</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.PSNParentalControl"><span class="badge">M</span>PSNParentalControl</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.PlatformAccount"><span class="badge">M</span>PlatformAccount</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.PlaystationAuth"><span class="badge">M</span>PlaystationAuth</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.PlaystationLinkInfo"><span class="badge">M</span>PlaystationLinkInfo</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.PreferredLangParams"><span class="badge">M</span>PreferredLangParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.PrevTwitch"><span class="badge">M</span>PrevTwitch</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.PrevTwitchResponse"><span class="badge">M</span>PrevTwitchResponse</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.Profile"><span class="badge">M</span>Profile</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.Profile.PromoCodesEntry"><span class="badge">M</span>Profile.PromoCodesEntry</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.PromotionInfo"><span class="badge">M</span>PromotionInfo</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.PromotionsResponse"><span class="badge">M</span>PromotionsResponse</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.RedditAuth"><span class="badge">M</span>RedditAuth</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.RedditLinkInfo"><span class="badge">M</span>RedditLinkInfo</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.ResendActivationParams"><span class="badge">M</span>ResendActivationParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.SetCommPrefsParams"><span class="badge">M</span>SetCommPrefsParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.SetPersonaParams"><span class="badge">M</span>SetPersonaParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.SocialLoginParams"><span class="badge">M</span>SocialLoginParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.StadiaAuth"><span class="badge">M</span>StadiaAuth</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.StadiaLinkInfo"><span class="badge">M</span>StadiaLinkInfo</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.StatusResponse"><span class="badge">M</span>StatusResponse</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.SteamAuth"><span class="badge">M</span>SteamAuth</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.SteamLinkInfo"><span class="badge">M</span>SteamLinkInfo</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.SteamPhoto"><span class="badge">M</span>SteamPhoto</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.TokenClaimResponse"><span class="badge">M</span>TokenClaimResponse</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.TokenClaimResponse.TokenClaimEntry"><span class="badge">M</span>TokenClaimResponse.TokenClaimEntry</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.TwitchAuth"><span class="badge">M</span>TwitchAuth</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.TwitchLinkInfo"><span class="badge">M</span>TwitchLinkInfo</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.TwitterAuth"><span class="badge">M</span>TwitterAuth</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.TwitterLinkInfo"><span class="badge">M</span>TwitterLinkInfo</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.UpdateCreatorCodeParams"><span class="badge">M</span>UpdateCreatorCodeParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.UpdatePasswordParams"><span class="badge">M</span>UpdatePasswordParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.UpdateUsernameParams"><span class="badge">M</span>UpdateUsernameParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.UserData"><span class="badge">M</span>UserData</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.UserData.MetaEntry"><span class="badge">M</span>UserData.MetaEntry</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.VKLinkInfo"><span class="badge">M</span>VKLinkInfo</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.VerifyPasswordParams"><span class="badge">M</span>VerifyPasswordParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.VerifyTOTPCodeParams"><span class="badge">M</span>VerifyTOTPCodeParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.VkAuth"><span class="badge">M</span>VkAuth</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.XboxAuth"><span class="badge">M</span>XboxAuth</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.XboxLinkInfo"><span class="badge">M</span>XboxLinkInfo</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.YoutubeAuth"><span class="badge">M</span>YoutubeAuth</a>
+					</li>
+					
+				</ul>
+			</li>
+			<li>
+				<b>Enums:</b>
+				<ul>
+				
+					<li>
+						<a href="#pubg.globalaccounts.BackendErrCode"><span class="badge">E</span>BackendErrCode</a>
+					</li>
+				
+				</ul>
+			</li>
+		
+		<li><a href="#scalar-value-types">Scalar Value Types</a></li>
+	</ul>
+</div>
+
+
+	
+	<p></p>
+
+	
+		
+		<h1 id="pubg.globalaccounts.Identity">Identity</h1>
+		<p>The Identity Service is the main RPC service for interacting with the Global Accounts/Identity system.</p><p>We use <a href="https://developers.google.com/protocol-buffers">Protocol Buffers</a> to define the API and then generate client and server stubs. If you're writing your service in Golang or Typescript you can ask us for a client library. For other languages the server also accepts JSON requests so you can use whatever HTTP request library you prefer.</p><p>When making JSON requests over HTTP you'll make requests like:</p><p><code></p><p>curl --location --request POST 'https://{base_url}/twirp/pubg.globalaccounts.Identity/GetGlobalAccount' \ <br>--header 'Authorization: Bearer {token}' \ <br>--header 'Content-Type: application/json' \<br>--data-raw '{"Criteria":"globalaccount.723f1e42-4347-4760-9460-c259d111a5f4", "CriteriaType": "guid"}'</p><p></code></p><p><b>NOTE: All requests will be made with the POST verb</b></p><p>Endpoints will only ever respond with a 200 or 500 status code. Keep in mind 200 doesn't always mean success; depending on the endpoint you're hitting the response object may contain a "code" field that will indicate success (200) or a specific error (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum).</p>
+			<hr>
+		
+			<h2 id="pubg.globalaccounts.Identity.CreateGlobalAccount">CreateGlobalAccount</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.CreateAccountParams">CreateAccountParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.GlobalAccountResponse">GlobalAccountResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>Creates a new Local Authentication record. Usually this triggers an Activation email to be sent to the user.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrTOSNotAccepted</p><p>- ErrInvalidDOB</p><p>- ErrInvalidUsername</p><p>- ErrInvalidCountry</p><p>- ErrUsernameTaken</p><p>- ErrEmailDomainNotWhitelisted</p><p>- ErrAccountAlreadyExists</p><p>- ErrAccountByGUIDNotFound</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.DeleteGlobalAccount">DeleteGlobalAccount</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.DeleteAccountParams">DeleteAccountParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.StatusResponse">StatusResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>Removes all of an account's records from the database. This CANNOT be undone.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrAccountByGUIDNotFound</p><p>- ErrCouldnotConvertAuth</p><p>- ErrCouldNotDeleteAccount</p><p>- ErrInvalidPassword</p><p>- ErrInvalidPasswordConfirm</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.GetGlobalAccount">GetGlobalAccount</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.CriteriaQuery">CriteriaQuery</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.GlobalAccountResponse">GlobalAccountResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>Retrieve all information about a Global Account</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrAccountByProviderIDNotFound</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.ActivateGlobalAccount">ActivateGlobalAccount</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.ActivateAccountParams">ActivateAccountParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.TokenClaimResponse">TokenClaimResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>When an account is created we usually send an email to the user asking them to verify their email and activate their account.</p><p>That email contains a JWT that must be sent to this endpoint to complete activation of the account.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrAccountByGUIDNotFound</p><p>- ErrInvalidActivationToken</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.ResendActivation">ResendActivation</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.ResendActivationParams">ResendActivationParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.StatusResponse">StatusResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>If a user did not receive their activation email, or it expired before they used it, this endpoint will trigger a new JWT to be generated and sent to the user.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrAccountByGUIDNotFound</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.BeginEmailChange">BeginEmailChange</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.BeginEmailChangeParams">BeginEmailChangeParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.StatusResponse">StatusResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>Changing the email address of an account is a two-step process. This is to ensure that the user has access to the new email address before we change the account information. When an email change is requested this is the first endpoint that should be hit. That will trigger a JWT to be generated and sent to the NewEmail. Once the user has the JWT from their new email it needs to be sent to `CompleteEmailChange` endpoint to save the new email address to the account.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrAccountByGUIDNotFound</p><p>- ErrEmailChangeNewEmailSameAsOld</p><p>- ErrFailedEmailValidation</p><p>- ErrIncorrectPassword</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.CompleteEmailChange">CompleteEmailChange</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.CompleteEmailChangeParams">CompleteEmailChangeParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.TokenClaimResponse">TokenClaimResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>This takes the JWT generated by BeginEmailChange, verifies its authenticity, and then saves the new email address to the user's account.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrAccountByGUIDNotFound</p><p>- ErrEmailChangeInvalidToken</p><p>- ErrEmailChangeNewEmailAlreadyRegistered</p><p>- ErrEmailChangeNewEmailSameAsOld</p><p>- ErrEmailChangeOldEmailAlreadyChanged</p><p>- ErrFailedEmailValidation</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.UpdateUsername">UpdateUsername</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.UpdateUsernameParams">UpdateUsernameParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.StatusResponse">StatusResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>This endpoint is used to set or update the username of an account.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrAccountByGUIDNotFound</p><p>- ErrInvalidUsername</p><p>- ErrUsernameTaken</p><p>- ErrUsernameAlreadySet</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.UpdatePassword">UpdatePassword</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.UpdatePasswordParams">UpdatePasswordParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.StatusResponse">StatusResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>This endpoint is used to change the password of an account when the user remembers the old password. We confirm that the old password is correct, salt and hash the new password, and then save it to the account.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrAccountByGUIDNotFound</p><p>- ErrInvalidPassword</p><p>- ErrInvalidPasswordConfirm</p><p>- ErrLocalAuthResetPasswordInvalidOldPassword</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.BeginForgotPassword">BeginForgotPassword</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.BeginForgotPasswordParams">BeginForgotPasswordParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.StatusResponse">StatusResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>When a user can't remember the password to access their account we generate a JWT and email it to the address on the account. The user must then send the JWT back to the `CompleteForgotPassword` endpoint to be able to change their password.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrFailedEmailValidation</p><p>- ErrTooManyRequestByForgotPassword</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.CompleteForgotPassword">CompleteForgotPassword</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.CompleteForgotPasswordParams">CompleteForgotPasswordParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.TokenClaimResponse">TokenClaimResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>This takes the JWT generated by `BeginForgotPassword` and verifies it. If the verification is successful we salt and hash the new password and update their account.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrAccountByGUIDNotFound</p><p>- ErrAccountOnHold</p><p>- ErrInvalidPassword</p><p>- ErrInvalidPasswordConfirm</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.SetCommPrefs">SetCommPrefs</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.SetCommPrefsParams">SetCommPrefsParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.StatusResponse">StatusResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>This endpoint changes whether or not the user wants to receive email communications from PUBG.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrAccountByGUIDNotFound</p><p>- ErrCouldnotConvertAuth</p><p>- ErrFailedUpdateEmailOptIn</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.SetPersona">SetPersona</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.SetPersonaParams">SetPersonaParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.StatusResponse">StatusResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>This changes the platform that's used as the user's Persona platform. The Persona platform dictates what username we display when communicating with the player.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrAccountByGUIDNotFound</p><p>- ErrCouldnotConvertAuth</p><p>- ErrFailedUpdatePersona</p><p>- ErrInvaildProvider</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.LinkYoutube">LinkYoutube</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.GuidInput">GuidInput</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.StatusResponse">StatusResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>Youtube linking is different than most of our other social links. We don't actually link with YT; they link with us. We use this method to save a record indicating that the user has linked with Youtube, but we have no information about their YouTube account.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrAccountByGUIDNotFound</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.LinkLitePC">LinkLitePC</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.GuidInput">GuidInput</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.StatusResponse">StatusResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>LitePC links contain no data about the user's LitePC account. We only use these links to track what users have access to LitePC.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrAccountByGUIDNotFound</p><p>- ErrLitePCLauncherRegistrationDisabled</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.CreateRelyingPartyLink">CreateRelyingPartyLink</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.CreateRelyingPartyLinkParams">CreateRelyingPartyLinkParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.StatusResponse">StatusResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>This is used to create a link record when a player logs in to Global Accounts through an OIDC Relying Partner.</p><p>These links are simply a record that the player logged in to the partner's system.</p><p>We do not receive any information about the player's account in the partner's system.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrAccountByGUIDNotFound</p><p>- ErrInvaildProvider</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.CreateLink">CreateLink</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.CreateLinkParams">CreateLinkParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.StatusResponse">StatusResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>This is used to create a link between a third-party account and a PUBG Global Account.</p><p>Youtube and LitePC should not be linked with this endpoint. (See <a href="#pubg.globalaccounts.Identity.LinkLitePC">LinkLitePC</a> and <a href="pubg.globalaccounts.Identity.LinkYoutube">LinkYoutube</a>)</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrAccountAlreadyLinked</p><p>- ErrAccountRecentlyUnlinked</p><p>- ErrFailedCreateLink</p><p>- ErrFailedDeleteLink</p><p>- ErrTSLProxyRequestFail</p><p>- ErrTSLPlatformAccountEmptyResponse</p><p>- ErrTSLPlatformAccountSummaryNotFound</p><p>- ErrTSLPlatformAccountSummaryMissingData</p><p>- ErrTSLPlatformAccountUnmarshalFail</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.DestroyLink">DestroyLink</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.DestroyLinkParams">DestroyLinkParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.StatusResponse">StatusResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>This is used to deactivate a link between a third-party account and a PUBG account. Destroyed links are not actually deleted, they're "deactivated". This leaves the record in the database for tracking purposes but the deactivated account will be omitted from Global Account lookups.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrAccountDeactivated</p><p>- ErrAccountByGUIDNotFound</p><p>- ErrAccountAlreadyLinked</p><p>- ErrProviderLocked</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.CheckLink">CheckLink</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.GuidProviderCombo">GuidProviderCombo</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.StatusResponse">StatusResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>This is used to determine whether a PUBG Global Account is linked to a third-party platform. This does not return information about the linked platform account, only whether or not the link is active.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrAccountByGUIDNotFound</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.GetLink">GetLink</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.GuidProviderCombo">GuidProviderCombo</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.GetLinkResponse">GetLinkResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>This returns information about a specific third-party account linked to a PUBG Global Account.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrAccountByGUIDNotFound</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.VerifyPassword">VerifyPassword</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.VerifyPasswordParams">VerifyPasswordParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.GlobalAccountResponse">GlobalAccountResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>This is the main endpoint used for logging in. We take an email address and plain-text password. The password is checked against the password stored on the account. If the passwords match we return the full Global Account object for that user and they can be considered logged in. If the password does not match what's stored on the account then no Account will be returned.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrAccountLocked</p><p>- ErrAccountUnconfirmed</p><p>- ErrTooManyRequestByIp</p><p>- ErrTooManyRequestByLogin</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.GetPrevTwitch">GetPrevTwitch</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.GetPrevTwitchParams">GetPrevTwitchParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.PrevTwitchResponse">PrevTwitchResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>Returns information about the last Twitch account linked to the specified Global Account.</p><p>This endpoint is generally not useful and only exists to support TSL.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrProviderAccountNotFound</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.BeginEnableTOTP">BeginEnableTOTP</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.GuidInput">GuidInput</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.BeginEnableTOTPResponse">BeginEnableTOTPResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p><div class="not-ready"><b>This endpoint is not ready for general use</b></div></p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.CompleteEnableTOTP">CompleteEnableTOTP</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.CompleteEnableTOTPParams">CompleteEnableTOTPParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.CompleteEnableTOTPResponse">CompleteEnableTOTPResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p><div class="not-ready"><b>This endpoint is not ready for general use</b></div></p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.RegenerateRecoveryTOPTCodes">RegenerateRecoveryTOPTCodes</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.GuidInput">GuidInput</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.StatusResponse">StatusResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p><div class="not-ready"><b>This endpoint is not ready for general use</b></div></p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.SendTOTPCode">SendTOTPCode</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.GuidInput">GuidInput</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.StatusResponse">StatusResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p><div class="not-ready"><b>This endpoint is not ready for general use</b></div></p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.VerifyTOTPCode">VerifyTOTPCode</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.VerifyTOTPCodeParams">VerifyTOTPCodeParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.StatusResponse">StatusResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p><div class="not-ready"><b>This endpoint is not ready for general use</b></div></p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.CheckGUIDLinkDelay">CheckGUIDLinkDelay</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.GuidProviderCombo">GuidProviderCombo</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.StatusResponse">StatusResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>When a user unlinks a provider from their PUBG Global Account there's a delay before they're allowed to link a different account from that same provider. This endpoint can be used to check whether or not a user is able to link a specific provider at this time.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrAccountRecentlyUnlinked</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.SocialLoginLookup">SocialLoginLookup</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.SocialLoginParams">SocialLoginParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.GlobalAccountResponse">GlobalAccountResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p></p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.SetPrefLang">SetPrefLang</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.PreferredLangParams">PreferredLangParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.StatusResponse">StatusResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>Set a user's Preferred Language.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrAccountByGUIDNotFound</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.MagicLinkGenerate">MagicLinkGenerate</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.MagicLinkGenerateParams">MagicLinkGenerateParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.MagicLinkGenerateResponse">MagicLinkGenerateResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>ErrMagicLinkCodeInvalid</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.MagicLinkValidate">MagicLinkValidate</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.MagicLinkCodeParams">MagicLinkCodeParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.MagicLinkValidateResponse">MagicLinkValidateResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p></p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.MagicLinkCheckComplete">MagicLinkCheckComplete</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.MagicLinkCodeParams">MagicLinkCodeParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.MagicLinkCheckCompleteResponse">MagicLinkCheckCompleteResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p></p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.UpdateCreatorCode">UpdateCreatorCode</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.UpdateCreatorCodeParams">UpdateCreatorCodeParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.StatusResponse">StatusResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>Updates the creator code attached to a global account.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrAccountByGUIDNotFound</p><p>- ErrNoPlatformsLinked</p><p>- ErrInvalidCreatorCode</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.GetCreatorCodes">GetCreatorCodes</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.GetCreatorCodesParams">GetCreatorCodesParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.CodesResponse">CodesResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>Gets a list of creator codes in order to populate UI elements</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.GetAccessLogs">GetAccessLogs</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.GuidInput">GuidInput</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.AccessLogResponse">AccessLogResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>Gets list of access logs and actived access logs to populate UI elements</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrCouldNotGetIpLogs</p><p>- ErrCouldNotGetSessionLogs</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.GetPromotions">GetPromotions</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.GetPromotionsParams">GetPromotionsParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.PromotionsResponse">PromotionsResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>Gets a list of ongoing promotions</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.ClaimPromoCode">ClaimPromoCode</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.ClaimPromoCodeParams">ClaimPromoCodeParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.StatusResponse">StatusResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>Claims a promo code for a given account and promotion</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrAccountByGUIDNotFound</p><p>- ErrCreatorCodeRequired</p><p>- ErrPromotionNotFound</p><p>- ErrPromotionNotActive</p><p>- ErrPromotionNoCodesAvailable</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+	
+		<h3 id="pubg.globalaccounts.AccessLog">AccessLog</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>SessionID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>SessionID is a key of session, it helps to clarify  this session data is for current user.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Timestamp</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>Timestamp the access log was created</p></td>
+					</tr>
+				
+					<tr>
+						<td>Browser</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>stored user's browser</p></td>
+					</tr>
+				
+					<tr>
+						<td>Os</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>stored user's os</p></td>
+					</tr>
+				
+					<tr>
+						<td>Country</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>stored user's county code based on IP</p></td>
+					</tr>
+				
+					<tr>
+						<td>IP</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>stored user's IP</p></td>
+					</tr>
+				
+					<tr>
+						<td>CurrentUser</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>This data is current session or not</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.AccessLogResponse">AccessLogResponse</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>Code</td>
+						<td><a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a></td>
+						<td></td>
+						<td><p>Indicates the outcome of the request.</p><p>Individual methods should document what values may be returned here.</p><p>See the "BackendErrCode" enum for all possible values.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Message</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>May contain a message about the response.</p></td>
+					</tr>
+				
+					<tr>
+						<td>ActivedAccessLogs</td>
+						<td><a href="#pubg.globalaccounts.AccessLog">AccessLog</a></td>
+						<td>repeated</td>
+						<td><p>list of AccessLog in session table</p></td>
+					</tr>
+				
+					<tr>
+						<td>AccessLogs</td>
+						<td><a href="#pubg.globalaccounts.AccessLog">AccessLog</a></td>
+						<td>repeated</td>
+						<td><p>list of AccessLog in iplog table</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.ActivateAccountParams">ActivateAccountParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>User</td>
+						<td><a href="#pubg.globalaccounts.UserData">UserData</a></td>
+						<td></td>
+						<td><p>Information about the end-user the request is for. Used for rate limiting and email translation.</p></td>
+					</tr>
+				
+					<tr>
+						<td>ActivationToken</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The JWT sent to the user's email to verify they have access to the email they signed up with.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.AfreecaTVAuth">AfreecaTVAuth</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID this Auth record represents</p></td>
+					</tr>
+				
+					<tr>
+						<td>ProviderID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Provider ID used to look up this Authentication record.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Deactivated</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not this link is active.</p></td>
+					</tr>
+				
+					<tr>
+						<td>CreatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was created, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>UpdatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was last updated, as Epoch time.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.AuthLinkInfo">AuthLinkInfo</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>Provider</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Indicates which of the LinkInfo fields is filled out</p></td>
+					</tr>
+				
+					<tr>
+						<td>Facebook</td>
+						<td><a href="#pubg.globalaccounts.FacebookLinkInfo">FacebookLinkInfo</a></td>
+						<td></td>
+						<td><p>Facebook account info</p></td>
+					</tr>
+				
+					<tr>
+						<td>Google</td>
+						<td><a href="#pubg.globalaccounts.GoogleLinkInfo">GoogleLinkInfo</a></td>
+						<td></td>
+						<td><p>Google  account info</p></td>
+					</tr>
+				
+					<tr>
+						<td>Line</td>
+						<td><a href="#pubg.globalaccounts.LineLinkInfo">LineLinkInfo</a></td>
+						<td></td>
+						<td><p>Line account info</p></td>
+					</tr>
+				
+					<tr>
+						<td>Playstation</td>
+						<td><a href="#pubg.globalaccounts.PlaystationLinkInfo">PlaystationLinkInfo</a></td>
+						<td></td>
+						<td><p>Playstation account info</p></td>
+					</tr>
+				
+					<tr>
+						<td>Steam</td>
+						<td><a href="#pubg.globalaccounts.SteamLinkInfo">SteamLinkInfo</a></td>
+						<td></td>
+						<td><p>Steam account info</p></td>
+					</tr>
+				
+					<tr>
+						<td>Twitch</td>
+						<td><a href="#pubg.globalaccounts.TwitchLinkInfo">TwitchLinkInfo</a></td>
+						<td></td>
+						<td><p>Twitch account info</p></td>
+					</tr>
+				
+					<tr>
+						<td>Twitter</td>
+						<td><a href="#pubg.globalaccounts.TwitterLinkInfo">TwitterLinkInfo</a></td>
+						<td></td>
+						<td><p>Twitter account info</p></td>
+					</tr>
+				
+					<tr>
+						<td>VK</td>
+						<td><a href="#pubg.globalaccounts.VKLinkInfo">VKLinkInfo</a></td>
+						<td></td>
+						<td><p>VK account info</p></td>
+					</tr>
+				
+					<tr>
+						<td>Xbox</td>
+						<td><a href="#pubg.globalaccounts.XboxLinkInfo">XboxLinkInfo</a></td>
+						<td></td>
+						<td><p>XBox account info</p></td>
+					</tr>
+				
+					<tr>
+						<td>Stadia</td>
+						<td><a href="#pubg.globalaccounts.StadiaLinkInfo">StadiaLinkInfo</a></td>
+						<td></td>
+						<td><p>Stadia account info</p></td>
+					</tr>
+				
+					<tr>
+						<td>Discord</td>
+						<td><a href="#pubg.globalaccounts.DiscordLinkInfo">DiscordLinkInfo</a></td>
+						<td></td>
+						<td><p>Discord account info</p></td>
+					</tr>
+				
+					<tr>
+						<td>Reddit</td>
+						<td><a href="#pubg.globalaccounts.RedditLinkInfo">RedditLinkInfo</a></td>
+						<td></td>
+						<td><p>Reddit account info</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.AuthenticationData">AuthenticationData</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>local</td>
+						<td><a href="#pubg.globalaccounts.LocalAuth">LocalAuth</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+					<tr>
+						<td>twitch</td>
+						<td><a href="#pubg.globalaccounts.TwitchAuth">TwitchAuth</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+					<tr>
+						<td>facebook</td>
+						<td><a href="#pubg.globalaccounts.FacebookAuth">FacebookAuth</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+					<tr>
+						<td>litepc</td>
+						<td><a href="#pubg.globalaccounts.LitePCAuth">LitePCAuth</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+					<tr>
+						<td>google</td>
+						<td><a href="#pubg.globalaccounts.GoogleAuth">GoogleAuth</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+					<tr>
+						<td>line</td>
+						<td><a href="#pubg.globalaccounts.LineAuth">LineAuth</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+					<tr>
+						<td>twitter</td>
+						<td><a href="#pubg.globalaccounts.TwitterAuth">TwitterAuth</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+					<tr>
+						<td>psn</td>
+						<td><a href="#pubg.globalaccounts.PlaystationAuth">PlaystationAuth</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+					<tr>
+						<td>steam</td>
+						<td><a href="#pubg.globalaccounts.SteamAuth">SteamAuth</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+					<tr>
+						<td>xbox</td>
+						<td><a href="#pubg.globalaccounts.XboxAuth">XboxAuth</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+					<tr>
+						<td>vk</td>
+						<td><a href="#pubg.globalaccounts.VkAuth">VkAuth</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+					<tr>
+						<td>youtube</td>
+						<td><a href="#pubg.globalaccounts.YoutubeAuth">YoutubeAuth</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+					<tr>
+						<td>stadia</td>
+						<td><a href="#pubg.globalaccounts.StadiaAuth">StadiaAuth</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+					<tr>
+						<td>discord</td>
+						<td><a href="#pubg.globalaccounts.DiscordAuth">DiscordAuth</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+					<tr>
+						<td>reddit</td>
+						<td><a href="#pubg.globalaccounts.RedditAuth">RedditAuth</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+					<tr>
+						<td>afreecatv</td>
+						<td><a href="#pubg.globalaccounts.AfreecaTVAuth">AfreecaTVAuth</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.BeginEmailChangeParams">BeginEmailChangeParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>User</td>
+						<td><a href="#pubg.globalaccounts.UserData">UserData</a></td>
+						<td></td>
+						<td><p>Information about the end-user the request is for. Used for rate limiting and email translation.</p></td>
+					</tr>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID of the account that's being updated.</p></td>
+					</tr>
+				
+					<tr>
+						<td>NewEmail</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The email address to change the account to.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Password</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The password for this account, used to confirm that the user has access to the account being changed.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.BeginEnableTOTPResponse">BeginEnableTOTPResponse</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>Code</td>
+						<td><a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a></td>
+						<td></td>
+						<td><p>Indicates the outcome of the request.</p><p>Individual methods should document what values may be returned here.</p><p>See the "BackendErrCode" enum for all possible values.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Message</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>May contain a message about the response.</p></td>
+					</tr>
+				
+					<tr>
+						<td>TOTPSetupImage</td>
+						<td><a href="#bytes">bytes</a></td>
+						<td></td>
+						<td><p>QR-Code image (200x200 PNG) suitable for use by clients like Google-Authenticator to enroll the user in OTP.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.BeginForgotPasswordParams">BeginForgotPasswordParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>User</td>
+						<td><a href="#pubg.globalaccounts.UserData">UserData</a></td>
+						<td></td>
+						<td><p>Information about the end-user the request is for. Used for rate limiting and email translation.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Email</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The email address of the account that we're recovering a password for. Not needed if GUID is used.</p></td>
+					</tr>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID of the account that we're recovering a password for. Not needed if Email is used.</p></td>
+					</tr>
+				
+					<tr>
+						<td>ClientID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Optional: OIDC Client ID of the service making the request.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.ClaimPromoCodeParams">ClaimPromoCodeParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>User</td>
+						<td><a href="#pubg.globalaccounts.UserData">UserData</a></td>
+						<td></td>
+						<td><p>Information about the end-user the request is for. Used for rate limiting and email translation</p></td>
+					</tr>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID of the account we're claiming a code for.</p></td>
+					</tr>
+				
+					<tr>
+						<td>PromotionID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The promotion ID of the promotion we're claiming a code for.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.CodesResponse">CodesResponse</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>Code</td>
+						<td><a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a></td>
+						<td></td>
+						<td><p>Indicates the outcome of the request.</p><p>Individual methods should document what values may be returned here.</p><p>See the "BackendErrCode" enum for all possible values.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Message</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>May contain a message about the response.</p></td>
+					</tr>
+				
+					<tr>
+						<td>CreatorCodes</td>
+						<td><a href="#string">string</a></td>
+						<td>repeated</td>
+						<td><p>List of creator codes.</p></td>
+					</tr>
+				
+					<tr>
+						<td>CreatorNames</td>
+						<td><a href="#string">string</a></td>
+						<td>repeated</td>
+						<td><p>List of creator names.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.CompleteEmailChangeParams">CompleteEmailChangeParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>User</td>
+						<td><a href="#pubg.globalaccounts.UserData">UserData</a></td>
+						<td></td>
+						<td><p>Information about the end-user the request is for. Used for rate limiting and email translation.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Token</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The JWT that we sent to the user's new email to verify they have access to the email account.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.CompleteEnableTOTPParams">CompleteEnableTOTPParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID of the account enabling OTP.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Code</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The JWT we sent to the user's email address to verify ownership of the account.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.CompleteEnableTOTPResponse">CompleteEnableTOTPResponse</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>Code</td>
+						<td><a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a></td>
+						<td></td>
+						<td><p>Indicates the outcome of the request.</p><p>Individual methods should document what values may be returned here.</p><p>See the "BackendErrCode" enum for all possible values.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Message</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>May contain a message about the response.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Result</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Indicates the result of the operation.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.CompleteForgotPasswordParams">CompleteForgotPasswordParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>User</td>
+						<td><a href="#pubg.globalaccounts.UserData">UserData</a></td>
+						<td></td>
+						<td><p>Information about the end-user the request is for. Used for rate limiting and email translation.</p></td>
+					</tr>
+				
+					<tr>
+						<td>ResetToken</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The JWT that we emailed to the user to verify they have access to the account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>NewPass</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The new password to set, in plaintext. Will be hashed/salted server-side.</p></td>
+					</tr>
+				
+					<tr>
+						<td>PassConf</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Confirmation of the new password. Must match the NewPass field.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.CreateAccountParams">CreateAccountParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>User</td>
+						<td><a href="#pubg.globalaccounts.UserData">UserData</a></td>
+						<td></td>
+						<td><p>Information about the end-user the request is for. Used for rate limiting and email translation</p></td>
+					</tr>
+				
+					<tr>
+						<td>Email</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The email address used to identify the new account</p></td>
+					</tr>
+				
+					<tr>
+						<td>Password</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The user's password in plaintext. Will be hashed/salted server-side</p></td>
+					</tr>
+				
+					<tr>
+						<td>PasswordConfirmation</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Confirmation of the user's password. Must match the Password field</p></td>
+					</tr>
+				
+					<tr>
+						<td>DateOfBirth</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>The user's Date of Birth in Epoch time</p></td>
+					</tr>
+				
+					<tr>
+						<td>Country</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The IATA country code where the user resides</p></td>
+					</tr>
+				
+					<tr>
+						<td>EmailOptIn</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not the user has consented to receiving emails from us</p></td>
+					</tr>
+				
+					<tr>
+						<td>TosAccepted</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not the user has agreed to the Terms of Service/Privacy Policy</p></td>
+					</tr>
+				
+					<tr>
+						<td>ClientID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Optional: The ClientID of the OIDC client creating this account</p></td>
+					</tr>
+				
+					<tr>
+						<td>LinkInfo</td>
+						<td><a href="#pubg.globalaccounts.AuthLinkInfo">AuthLinkInfo</a></td>
+						<td></td>
+						<td><p>Optional: Information about additional authentication providers to link the new account to</p></td>
+					</tr>
+				
+					<tr>
+						<td>ActivateTest</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Optional: A/B test state. On or off.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Username</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The username that the user has chosen for the account</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.CreateLinkParams">CreateLinkParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>User</td>
+						<td><a href="#pubg.globalaccounts.UserData">UserData</a></td>
+						<td></td>
+						<td><p>Information about the end-user the request is for. Used for rate limiting and email translation.</p></td>
+					</tr>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID of the account being linked.</p></td>
+					</tr>
+				
+					<tr>
+						<td>LinkInfo</td>
+						<td><a href="#pubg.globalaccounts.AuthLinkInfo">AuthLinkInfo</a></td>
+						<td></td>
+						<td><p>Info about the third-party account being linked to the Global Account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>MagicLinkCode</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>A magic link code to use to lookup AuthLinkInfo for the magic linking flow.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.CreateRelyingPartyLinkParams">CreateRelyingPartyLinkParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>User</td>
+						<td><a href="#pubg.globalaccounts.UserData">UserData</a></td>
+						<td></td>
+						<td><p>Information about the end-user the request is for. Used for rate limiting and email translation.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Provider</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The name of the provider the record is for.</p></td>
+					</tr>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>A Global Account ID</p></td>
+					</tr>
+				
+					<tr>
+						<td>ClientID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Optional: OIDC Client ID of the service making the request.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.CreatorInfo">CreatorInfo</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>CreatorCode</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Code used to support this creator</p></td>
+					</tr>
+				
+					<tr>
+						<td>CreatorName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Human-readable creator name</p></td>
+					</tr>
+				
+					<tr>
+						<td>UpdatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When this code was selected by the user, as Epoch time</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.CriteriaQuery">CriteriaQuery</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>Criteria</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The criteria you wish to search for</p></td>
+					</tr>
+				
+					<tr>
+						<td>CriteriaType</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Describes what part of the account Criteria is searching for.</p><p>Possible values:</p><p>- guid</p><p>- provider_id</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.DeleteAccountParams">DeleteAccountParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>User</td>
+						<td><a href="#pubg.globalaccounts.UserData">UserData</a></td>
+						<td></td>
+						<td><p>Information about the end-user the request is for. Used for rate limiting and email translation.</p></td>
+					</tr>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID of the account to be deleted.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Password</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The user's password, used to confirm access to the account before deletion.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.DestroyLinkParams">DestroyLinkParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>User</td>
+						<td><a href="#pubg.globalaccounts.UserData">UserData</a></td>
+						<td></td>
+						<td><p>Information about the end-user the request is for. Used for rate limiting and email translation.</p></td>
+					</tr>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID of the account to be unlinked.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Provider</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The name of the Authentication Provider to unlink.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.DiscordAuth">DiscordAuth</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+					<tr>
+						<td>ProviderID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Provider ID used to look up this Authentication record.</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The account's Username, without the Discriminator code.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Deactivated</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not this link is active.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Email</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Email address associated with this Discord account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>DiscordID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The user's ID in Discord's identity system.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Discriminator</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The user's discriminator, or hash code. In "Username#12345" the Discriminator is "12345".</p></td>
+					</tr>
+				
+					<tr>
+						<td>CreatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Discord Auth was created, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>UpdatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Discord Auth was last updated, as Epoch time.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.DiscordLinkInfo">DiscordLinkInfo</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>ID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Discord user ID</p></td>
+					</tr>
+				
+					<tr>
+						<td>Username</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Discord Username</p></td>
+					</tr>
+				
+					<tr>
+						<td>Discriminator</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Discord unique identifier (like #1234)</p></td>
+					</tr>
+				
+					<tr>
+						<td>Email</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>User's email address</p></td>
+					</tr>
+				
+					<tr>
+						<td>Verified</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not the user's email has been verified.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Bot</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not this account is a bot.</p></td>
+					</tr>
+				
+					<tr>
+						<td>AccessToken</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Discord OIDC Access Token</p></td>
+					</tr>
+				
+					<tr>
+						<td>RefreshToken</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Discord OIDC Refresh Token</p></td>
+					</tr>
+				
+					<tr>
+						<td>ExpiresIn</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Discord OIDC Access Token expires</p></td>
+					</tr>
+				
+					<tr>
+						<td>AvatarHash</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Identifier for the user's Avatar. Use this with Discord's CDN to retrieve the avatar image. For more info see https://discord.com/developers/docs/reference#image-formatting</p></td>
+					</tr>
+				
+					<tr>
+						<td>PremiumType</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>Premium types den9te the level of premium a user has.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Flags</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>Special information about this account, such as if it's a Discord employee, a bot, etc.</p></td>
+					</tr>
+				
+					<tr>
+						<td>PublicFlags</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>Same as Flags, but only lists flags displayed to the public.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.FacebookAuth">FacebookAuth</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID this Auth record represents</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Display Name of this Facebook account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Deactivated</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not this link is active.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Email</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The email address associated with this Facebook account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>FacebookID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The ID of the Facebook account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>CreatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was created, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>UpdatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was last updated, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>ProviderID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Provider ID used to look up this Authentication record.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.FacebookLinkInfo">FacebookLinkInfo</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>ID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Facebook Account ID</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Facebook display name</p></td>
+					</tr>
+				
+					<tr>
+						<td>AccessToken</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Facebook OIDC Access token</p></td>
+					</tr>
+				
+					<tr>
+						<td>Email</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Facebook account email address</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.GetCreatorCodesParams">GetCreatorCodesParams</h3>
+		<p></p>
+
+		
+
+		
+	
+		<h3 id="pubg.globalaccounts.GetLinkResponse">GetLinkResponse</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>Code</td>
+						<td><a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a></td>
+						<td></td>
+						<td><p>Indicates the outcome of the request.</p><p>Individual methods should document what values may be returned here.</p><p>See the "BackendErrCode" enum for all possible values.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Message</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>May contain a message about the response.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Link</td>
+						<td><a href="#pubg.globalaccounts.AuthenticationData">AuthenticationData</a></td>
+						<td></td>
+						<td><p>Details about the linked account requested, if found.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.GetPrevTwitchParams">GetPrevTwitchParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>User</td>
+						<td><a href="#pubg.globalaccounts.UserData">UserData</a></td>
+						<td></td>
+						<td><p>Information about the end-user the request is for. Used for rate limiting and email translation.</p></td>
+					</tr>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>A Global Account ID</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.GetPromotionsParams">GetPromotionsParams</h3>
+		<p></p>
+
+		
+
+		
+	
+		<h3 id="pubg.globalaccounts.GlobalAccount">GlobalAccount</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID of this account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Username</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The username of the selected persona platform, or the user's email address.</p></td>
+					</tr>
+				
+					<tr>
+						<td>PersonaPlatform</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The authentication provider that the Username field is from.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Activated</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not this account's email has been confirmed.</p></td>
+					</tr>
+				
+					<tr>
+						<td>EmailOptIn</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not the user wants to receive emails from PUBG.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Authentications</td>
+						<td><a href="#pubg.globalaccounts.AuthenticationData">AuthenticationData</a></td>
+						<td></td>
+						<td><p>All third-party accounts that are linked to this Global Account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Platforms</td>
+						<td><a href="#pubg.globalaccounts.GlobalAccount.PlatformsEntry">GlobalAccount.PlatformsEntry</a></td>
+						<td>repeated</td>
+						<td><p>PUBG Platform accounts linked to this GlobalAccount.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Profile</td>
+						<td><a href="#pubg.globalaccounts.Profile">Profile</a></td>
+						<td></td>
+						<td><p>Profile information for this GlobalAccount.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.GlobalAccount.PlatformsEntry">GlobalAccount.PlatformsEntry</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>key</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+					<tr>
+						<td>value</td>
+						<td><a href="#pubg.globalaccounts.PlatformAccount">PlatformAccount</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.GlobalAccountResponse">GlobalAccountResponse</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>Code</td>
+						<td><a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a></td>
+						<td></td>
+						<td><p>Indicates the outcome of the request.</p><p>Individual methods should document what values may be returned here.</p><p>See the "BackendErrCode" enum for all possible values.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Message</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>May contain a message about the response.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Account</td>
+						<td><a href="#pubg.globalaccounts.GlobalAccount">GlobalAccount</a></td>
+						<td></td>
+						<td><p>Details about the account that was requested, if found.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.GoogleAuth">GoogleAuth</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID this Auth record represents</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Whether or not this link is active.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Deactivated</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not this link is active.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Email</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Email associated with this Google account</p></td>
+					</tr>
+				
+					<tr>
+						<td>GoogleID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The ID of the Google account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>CreatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was created, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>UpdatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was last updated, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>ProviderID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Provider ID used to look up this Authentication record.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.GoogleLinkInfo">GoogleLinkInfo</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>ID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Google account ID</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Google account display name</p></td>
+					</tr>
+				
+					<tr>
+						<td>AccessToken</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Google OIDC Access Token</p></td>
+					</tr>
+				
+					<tr>
+						<td>RefreshToken</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Google OIDC Refresh Token</p></td>
+					</tr>
+				
+					<tr>
+						<td>Email</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Google account email address</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.GuidInput">GuidInput</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>User</td>
+						<td><a href="#pubg.globalaccounts.UserData">UserData</a></td>
+						<td></td>
+						<td><p>Information about the end-user the request is for. Used for rate limiting and email translation.</p></td>
+					</tr>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>A Global Account ID</p></td>
+					</tr>
+				
+					<tr>
+						<td>ClientID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Optional: OIDC Client ID of the service making the request.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.GuidProviderCombo">GuidProviderCombo</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>A Global Account ID</p></td>
+					</tr>
+				
+					<tr>
+						<td>Provider</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The name of an Authentication Provider</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.LineAuth">LineAuth</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID this Auth record represents</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Whether or not this link is active.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Deactivated</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not this link is active.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Email</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Email address associated with this Line account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>LineID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The ID of the Line account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>CreatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was created, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>UpdatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was last updated, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>ProviderID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Provider ID used to look up this Authentication record.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.LineLinkInfo">LineLinkInfo</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>ID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Line Account ID</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Line display name</p></td>
+					</tr>
+				
+					<tr>
+						<td>AccessToken</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Line OIDC Access Token</p></td>
+					</tr>
+				
+					<tr>
+						<td>RefreshToken</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Line OIDC Refresh Token</p></td>
+					</tr>
+				
+					<tr>
+						<td>Email</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Line account email address</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.LitePCAuth">LitePCAuth</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID this Auth record represents</p></td>
+					</tr>
+				
+					<tr>
+						<td>ProviderID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Provider ID used to look up this Authentication record.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Deactivated</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not this link is active.</p></td>
+					</tr>
+				
+					<tr>
+						<td>CreatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was created, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>UpdatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was last updated, as Epoch time.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.LocalAuth">LocalAuth</h3>
+		<p>The LocalAuthentication record is the main record for a Global Account. Every Global Account has a Local Authentication record.</p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID this Local Auth record represents</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Email Address of the Local auth.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Deactivated</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not this record is active.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Confirmed</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not this account's email address has been verified.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Email</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The IATA country code where this user resides.</p><p>string Country = 5;</p><p>The user's Date of Birth, as Epoch time.</p><p>int64 DateOfBirth = 6;</p><p>The user's Email address.</p><p>Whether or not the user would like to receive email communications from PUBG.</p><p>bool EmailOptIn = 8;</p></td>
+					</tr>
+				
+					<tr>
+						<td>Locked</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not this account is Locked.</p><p>An account that fails to login too many times will be locked.</p><p>Resetting the password clears the lock on the account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>OnHold</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not Player Services has place this account On Hold.</p></td>
+					</tr>
+				
+					<tr>
+						<td>CreatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>Whether or not this player accepted our Terms of Service/Privacy Policy.</p><p>bool ToSAccepted = 12;</p><p>When the user last updated their EmailOptIn selection, as Epoch time.</p><p>int64 EmailOptInUpdatedAt = 13;</p><p>When the Local Auth was created, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>UpdatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was last updated, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>ProviderID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Provider ID used to look up this Authentication record.</p><p>It shows preffered language, when user select language manually</p><p>string PreferredLanguage = 17;</p><p>The username of the local auth.</p><p>string Username = 18;</p><p>Information for the creator this account is supporting</p><p>CreatorInfo CreatorInfo = 19;</p><p>Promo codes claimed by this account</p><p>map<string, string> PromoCodes = 20;</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.MagicLinkCheckCompleteResponse">MagicLinkCheckCompleteResponse</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The linked Global Account GUID</p></td>
+					</tr>
+				
+					<tr>
+						<td>Code</td>
+						<td><a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a></td>
+						<td></td>
+						<td><p>Indicates the outcome of the request.</p><p>Individual methods should document what values may be returned here.</p><p>See the "BackendErrCode" enum for all possible values.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Message</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>May contain a message about the response.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.MagicLinkCodeParams">MagicLinkCodeParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>User</td>
+						<td><a href="#pubg.globalaccounts.UserData">UserData</a></td>
+						<td></td>
+						<td><p>Information about the end-user the request is for. Used for rate limiting and email translation.</p></td>
+					</tr>
+				
+					<tr>
+						<td>LinkCode</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The magiclink code to validate</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.MagicLinkGenerateParams">MagicLinkGenerateParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>User</td>
+						<td><a href="#pubg.globalaccounts.UserData">UserData</a></td>
+						<td></td>
+						<td><p>Information about the end-user the request is for. Used for rate limiting and email translation.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Provider</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The provider name, for example steam/xbox/etc</p></td>
+					</tr>
+				
+					<tr>
+						<td>ProviderID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The provider ID of the player, for example steamID</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The provider display name</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.MagicLinkGenerateResponse">MagicLinkGenerateResponse</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>LinkCode</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The magiclink code to validate</p></td>
+					</tr>
+				
+					<tr>
+						<td>Code</td>
+						<td><a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a></td>
+						<td></td>
+						<td><p>Indicates the outcome of the request.</p><p>Individual methods should document what values may be returned here.</p><p>See the "BackendErrCode" enum for all possible values.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Message</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>May contain a message about the response.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.MagicLinkValidateResponse">MagicLinkValidateResponse</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>Provider</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The provider name, for example steam/xbox/etc</p></td>
+					</tr>
+				
+					<tr>
+						<td>ProviderID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The provider ID of the player, for example steamID</p></td>
+					</tr>
+				
+					<tr>
+						<td>Code</td>
+						<td><a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a></td>
+						<td></td>
+						<td><p>Indicates the outcome of the request.</p><p>Individual methods should document what values may be returned here.</p><p>See the "BackendErrCode" enum for all possible values.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Message</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>May contain a message about the response.</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The provider display name</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.PSNParentalControl">PSNParentalControl</h3>
+		<p>The parental controls configured for this Playstation account.</p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>RestrictChat</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>"This control blocks a Sub Account from using text chat, voice chat, video chat, and other messaging features". More info on the <a href="https://www.playstation.com/en-us/network/legal/ratings/">Playstation Legal Doc</a></p></td>
+					</tr>
+				
+					<tr>
+						<td>RestrictUGM</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>"This parental control blocks a Sub Account from posting or viewing user-generated content". More info on the <a href="https://www.playstation.com/en-us/network/legal/ratings/">Playstation Legal Doc</a></p></td>
+					</tr>
+				
+					<tr>
+						<td>RestrictStoreContent</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>"This setting allows a Master Account holder to A) prevent a Sub Account from buying game content through PSN that not intended for his/her age according to the ESRB rating system and B) prevent a Sub Account from playing software content on PSN that is not intended for his age according to the ESRB rating system.". More info on the <a href="https://www.playstation.com/en-us/network/legal/ratings/">Playstation Legal Doc</a></p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.PlatformAccount">PlatformAccount</h3>
+		<p>A PlatformAccount links a TSL Account ID to a GlobalAccount/Provider link.</p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID this link belongs to.</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The user's TSL Username</p></td>
+					</tr>
+				
+					<tr>
+						<td>PlatformID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The TSL Account ID.</p></td>
+					</tr>
+				
+					<tr>
+						<td>AuthProviderID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The user's ID in the associated auth provider (XBox ID, PSN ID, etc.)</p></td>
+					</tr>
+				
+					<tr>
+						<td>CreatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>The time when this link was created, Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>UpdatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>The time when this link was last updated, Epoch time.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.PlaystationAuth">PlaystationAuth</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID this Auth record represents</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Display Name of this Playstation account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Deactivated</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not this link is active.</p></td>
+					</tr>
+				
+					<tr>
+						<td>CommunityDomain</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>TODO</p></td>
+					</tr>
+				
+					<tr>
+						<td>DateOfBirth</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Date of Birth of the user as reported to Playstation</p></td>
+					</tr>
+				
+					<tr>
+						<td>Age</td>
+						<td><a href="#int32">int32</a></td>
+						<td></td>
+						<td><p>The age of the user as calculated by Playstation</p></td>
+					</tr>
+				
+					<tr>
+						<td>Language</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The language the user configured on their Playstation account</p></td>
+					</tr>
+				
+					<tr>
+						<td>PSNID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The ID of this Playstation account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>PSNRegion</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Region of this Playstation account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>SubAccount</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not this account is a sub-account of another PSN account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>ParentalControl</td>
+						<td><a href="#pubg.globalaccounts.PSNParentalControl">PSNParentalControl</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+					<tr>
+						<td>CreatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was created, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>UpdatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was last updated, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>ProviderID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Provider ID used to look up this Authentication record.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.PlaystationLinkInfo">PlaystationLinkInfo</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>AccountID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Playstation Account ID</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Playstation display name</p></td>
+					</tr>
+				
+					<tr>
+						<td>AccessToken</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Playstation OIDC Access token</p></td>
+					</tr>
+				
+					<tr>
+						<td>Age</td>
+						<td><a href="#int32">int32</a></td>
+						<td></td>
+						<td><p>User's age reported by Playstation</p></td>
+					</tr>
+				
+					<tr>
+						<td>CommunityDomain</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>TODO</p></td>
+					</tr>
+				
+					<tr>
+						<td>DateOfBirth</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>User's Date of Birth reported by Playstation</p></td>
+					</tr>
+				
+					<tr>
+						<td>Language</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>User's language reported by Playstation</p></td>
+					</tr>
+				
+					<tr>
+						<td>ParentalControl</td>
+						<td><a href="#pubg.globalaccounts.PSNParentalControl">PSNParentalControl</a></td>
+						<td></td>
+						<td><p>Parental controls enabled on this Playstation account</p></td>
+					</tr>
+				
+					<tr>
+						<td>Region</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Playstation account region</p></td>
+					</tr>
+				
+					<tr>
+						<td>IsSubAccount</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not this account is a sub-account of another PSN account.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.PreferredLangParams">PreferredLangParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>User</td>
+						<td><a href="#pubg.globalaccounts.UserData">UserData</a></td>
+						<td></td>
+						<td><p>Information about the end-user the request is for. Used for rate limiting and email translation</p></td>
+					</tr>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID this Auth record represents</p></td>
+					</tr>
+				
+					<tr>
+						<td>Language</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>User's preferred language</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.PrevTwitch">PrevTwitch</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>ID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Twitch ID that the account was last linked with.</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Twitch Display Name of the Twitch Account that this Global Account was last linked to.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.PrevTwitchResponse">PrevTwitchResponse</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>Code</td>
+						<td><a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a></td>
+						<td></td>
+						<td><p>Indicates the outcome of the request.</p><p>Individual methods should document what values may be returned here.</p><p>See the "BackendErrCode" enum for all possible values.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Message</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>May contain a message about the response.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Data</td>
+						<td><a href="#pubg.globalaccounts.PrevTwitch">PrevTwitch</a></td>
+						<td></td>
+						<td><p>Details about the previously linked Twitch account.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.Profile">Profile</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID this Profile record represents</p></td>
+					</tr>
+				
+					<tr>
+						<td>ProviderID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Provider ID for this Profile</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The DisplayName for this Profile</p></td>
+					</tr>
+				
+					<tr>
+						<td>Country</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>THe IATA country code for this user profile</p></td>
+					</tr>
+				
+					<tr>
+						<td>DateOfBirth</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>The user's date of birth, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Email</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The user's email address</p></td>
+					</tr>
+				
+					<tr>
+						<td>EmailOptIn</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not the user would like to receive email communications from PUBG.</p></td>
+					</tr>
+				
+					<tr>
+						<td>ToSAccepted</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not this player accepted out Terms of Service/Privacy Policy</p></td>
+					</tr>
+				
+					<tr>
+						<td>EmailOptInUpdatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the user last updated their EmailOptIn selection, as Epoch time</p></td>
+					</tr>
+				
+					<tr>
+						<td>PreferredLanguage</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>User's preferred language</p></td>
+					</tr>
+				
+					<tr>
+						<td>Username</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Username for this Profile</p></td>
+					</tr>
+				
+					<tr>
+						<td>CreatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the profile was created, as Epoch time</p></td>
+					</tr>
+				
+					<tr>
+						<td>UpdatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the profile was last updated, as Epoch time</p></td>
+					</tr>
+				
+					<tr>
+						<td>CreatorInfo</td>
+						<td><a href="#pubg.globalaccounts.CreatorInfo">CreatorInfo</a></td>
+						<td></td>
+						<td><p>Information for the creator this account is supporting</p></td>
+					</tr>
+				
+					<tr>
+						<td>PromoCodes</td>
+						<td><a href="#pubg.globalaccounts.Profile.PromoCodesEntry">Profile.PromoCodesEntry</a></td>
+						<td>repeated</td>
+						<td><p>Promo codes claimed by this profile</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.Profile.PromoCodesEntry">Profile.PromoCodesEntry</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>key</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+					<tr>
+						<td>value</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.PromotionInfo">PromotionInfo</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>PromotionID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Internal ID for the promotion</p></td>
+					</tr>
+				
+					<tr>
+						<td>Name</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Name for the promotion</p></td>
+					</tr>
+				
+					<tr>
+						<td>Description</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Description of the promotion</p></td>
+					</tr>
+				
+					<tr>
+						<td>ImageURL</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>URL for image to be shown with promo info</p></td>
+					</tr>
+				
+					<tr>
+						<td>LinkURL</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>URL for the external shop link</p></td>
+					</tr>
+				
+					<tr>
+						<td>Remaining</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>Number of unclaimed codes for the promotion</p></td>
+					</tr>
+				
+					<tr>
+						<td>Total</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>Total number of codes for this promotion</p></td>
+					</tr>
+				
+					<tr>
+						<td>StartDate</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>Start date for this promotion</p></td>
+					</tr>
+				
+					<tr>
+						<td>EndDate</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>End date for this promotion</p></td>
+					</tr>
+				
+					<tr>
+						<td>PreGeneratedCodes</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not this promotion's codes were pregenerated</p></td>
+					</tr>
+				
+					<tr>
+						<td>PromotionType</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The type of promotion this is</p></td>
+					</tr>
+				
+					<tr>
+						<td>ShowCode</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not the UI should display the claimed code</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.PromotionsResponse">PromotionsResponse</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>Code</td>
+						<td><a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a></td>
+						<td></td>
+						<td><p>Indicates the outcome of the request.</p><p>Individual methods should document what values may be returned here.</p><p>See the "BackendErrCode" enum for all possible values.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Message</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>May contain a message about the response.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Promotions</td>
+						<td><a href="#pubg.globalaccounts.PromotionInfo">PromotionInfo</a></td>
+						<td>repeated</td>
+						<td><p>List of promotions.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.RedditAuth">RedditAuth</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID this Auth record represents</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Display Name of this Reddit account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Deactivated</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not this link is active.</p></td>
+					</tr>
+				
+					<tr>
+						<td>RedditID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The ID of this Reddit account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>CreatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was created, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>UpdatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was last updated, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>ProviderID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Provider ID used to look up this Authentication record.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.RedditLinkInfo">RedditLinkInfo</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>ID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Reddit Account ID</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Reddit display name</p></td>
+					</tr>
+				
+					<tr>
+						<td>AccessToken</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Reddit OIDC Access token</p></td>
+					</tr>
+				
+					<tr>
+						<td>RefreshToken</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Reddit OIDC Refresh token</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.ResendActivationParams">ResendActivationParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>User</td>
+						<td><a href="#pubg.globalaccounts.UserData">UserData</a></td>
+						<td></td>
+						<td><p>Information about the end-user the request is for. Used for rate limiting and email translation.</p></td>
+					</tr>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>A Global Account ID</p></td>
+					</tr>
+				
+					<tr>
+						<td>ClientID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Optional: OIDC Client ID of the service making the request.</p></td>
+					</tr>
+				
+					<tr>
+						<td>ActivateTest</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Optional: A/B test state. On or off.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.SetCommPrefsParams">SetCommPrefsParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>User</td>
+						<td><a href="#pubg.globalaccounts.UserData">UserData</a></td>
+						<td></td>
+						<td><p>Information about the end-user the request is for. Used for rate limiting and email translation.</p></td>
+					</tr>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID of the account being updated.</p></td>
+					</tr>
+				
+					<tr>
+						<td>EmailOptIn</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not the user wishes to receive communications from PUBG.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.SetPersonaParams">SetPersonaParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID of the account being updated.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Platform</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The platform selected as the user's Persona Platform.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.SocialLoginParams">SocialLoginParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>User</td>
+						<td><a href="#pubg.globalaccounts.UserData">UserData</a></td>
+						<td></td>
+						<td><p>Information about the end-user the request is for. Used for rate limiting and email translation</p></td>
+					</tr>
+				
+					<tr>
+						<td>ProviderID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The ProviderID used to look up Global account .</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.StadiaAuth">StadiaAuth</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID this Auth record represents</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Display Name of this Stadia account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Deactivated</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether of not this link is active.</p></td>
+					</tr>
+				
+					<tr>
+						<td>StadiaID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The ID of this Stadia account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>CreatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was created, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>UpdatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was last updated, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>ProviderID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Provider ID used to look up this Authentication record.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.StadiaLinkInfo">StadiaLinkInfo</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>ID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Stadia player ID</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Stadia display name</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.StatusResponse">StatusResponse</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>Code</td>
+						<td><a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a></td>
+						<td></td>
+						<td><p>Indicates the outcome of the request.</p><p>Individual methods should document what values may be returned here.</p><p>See the "BackendErrCode" enum for all possible values.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Message</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>May contain a message about the response.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Error</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Details of the error specified by the Code field.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.SteamAuth">SteamAuth</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID this Auth record represents</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The current Display Name of this Steam account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Deactivated</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not this link is active.</p></td>
+					</tr>
+				
+					<tr>
+						<td>SteamID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The ID of this Steam account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>CreatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was created, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>UpdatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was last updated, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>ProviderID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Provider ID used to look up this Authentication record.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.SteamLinkInfo">SteamLinkInfo</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>ID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Steam account ID</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Steam display name</p></td>
+					</tr>
+				
+					<tr>
+						<td>Photos</td>
+						<td><a href="#pubg.globalaccounts.SteamPhoto">SteamPhoto</a></td>
+						<td>repeated</td>
+						<td><p>Steam profile picture</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.SteamPhoto">SteamPhoto</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>Value</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Link to a profile picture</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.TokenClaimResponse">TokenClaimResponse</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>Code</td>
+						<td><a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a></td>
+						<td></td>
+						<td><p>Indicates the outcome of the request.</p><p>Individual methods should document what values may be returned here.</p><p>See the "BackendErrCode" enum for all possible values.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Message</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>May contain a message about the response.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Error</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Details of the error specified by the Code field.</p></td>
+					</tr>
+				
+					<tr>
+						<td>TokenClaim</td>
+						<td><a href="#pubg.globalaccounts.TokenClaimResponse.TokenClaimEntry">TokenClaimResponse.TokenClaimEntry</a></td>
+						<td>repeated</td>
+						<td><p>Data extracted from the JWT</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.TokenClaimResponse.TokenClaimEntry">TokenClaimResponse.TokenClaimEntry</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>key</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+					<tr>
+						<td>value</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.TwitchAuth">TwitchAuth</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID this Auth record represents.</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The user's Twitch Display Name.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Deactivated</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not this link is active.</p></td>
+					</tr>
+				
+					<tr>
+						<td>BadCredentials</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Set to True if the Access Token/Refresh Token pair are no longer valid.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Email</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The email address associated with the Twitch account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>TwitchID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The ID of the Twitch account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Username</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The user's Twitch Display Name.</p></td>
+					</tr>
+				
+					<tr>
+						<td>AccessToken</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The OIDC Access Token for this account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>CreatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was created, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>UpdatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was last updated, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>ProviderID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Provider ID used to look up this Authentication record.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.TwitchLinkInfo">TwitchLinkInfo</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>ID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Twitch account ID</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Twitch display name</p></td>
+					</tr>
+				
+					<tr>
+						<td>AccessToken</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Twitch OIDC Access Token</p></td>
+					</tr>
+				
+					<tr>
+						<td>RefreshToken</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Twitch OIDC Refresh Token</p></td>
+					</tr>
+				
+					<tr>
+						<td>Email</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Twitch account email address</p></td>
+					</tr>
+				
+					<tr>
+						<td>Username</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Twitch account username</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.TwitterAuth">TwitterAuth</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID this Auth record represents</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Whether or not this link is active.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Deactivated</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not this link is active.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Email</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Email Address associated with this Twitter account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>TwitterID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The ID of this Twitter account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>CreatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was created, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>UpdatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was last updated, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>ProviderID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Provider ID used to look up this Authentication record.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.TwitterLinkInfo">TwitterLinkInfo</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>ID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Twitter Account ID</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Twitter display name</p></td>
+					</tr>
+				
+					<tr>
+						<td>AccessToken</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Twitter OIDC Access Token</p></td>
+					</tr>
+				
+					<tr>
+						<td>Email</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Twitter account email</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.UpdateCreatorCodeParams">UpdateCreatorCodeParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>User</td>
+						<td><a href="#pubg.globalaccounts.UserData">UserData</a></td>
+						<td></td>
+						<td><p>Information about the end-user the request is for. Used for rate limiting and email translation</p></td>
+					</tr>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID of the account we're updating the creator code for.</p></td>
+					</tr>
+				
+					<tr>
+						<td>CreatorCode</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The creator code to attach to the account.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.UpdatePasswordParams">UpdatePasswordParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>User</td>
+						<td><a href="#pubg.globalaccounts.UserData">UserData</a></td>
+						<td></td>
+						<td><p>Information about the end-user the request is for. Used for rate limiting and email translation.</p></td>
+					</tr>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID of the account that's being updated.</p></td>
+					</tr>
+				
+					<tr>
+						<td>OldPass</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The password originally set on the account. Used to confirm that the user has access to the account being changed.</p></td>
+					</tr>
+				
+					<tr>
+						<td>NewPass</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The new password to set, in plaintext. Will be hashed/salted server-side.</p></td>
+					</tr>
+				
+					<tr>
+						<td>PassConf</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Confirmation of the new password. Must match the NewPass field.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.UpdateUsernameParams">UpdateUsernameParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>User</td>
+						<td><a href="#pubg.globalaccounts.UserData">UserData</a></td>
+						<td></td>
+						<td><p>Information about the end-user the request is for. Used for rate limiting and email translation.</p></td>
+					</tr>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID of the account that's being updated.</p></td>
+					</tr>
+				
+					<tr>
+						<td>NewUsername</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>THe new username to be set.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.UserData">UserData</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>IP</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The IP address of the player that the request is about.</p><p>This must be the IP of the end-user, not a server IP, because rate limiting is based off this value.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Locale</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The language-code the user expects to receive emails in. Defaults to English if not present.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Relying</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The relaying being used making a log</p></td>
+					</tr>
+				
+					<tr>
+						<td>Meta</td>
+						<td><a href="#pubg.globalaccounts.UserData.MetaEntry">UserData.MetaEntry</a></td>
+						<td>repeated</td>
+						<td><p>The Meta contained addtional information like userAgent to store on ip log tables</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.UserData.MetaEntry">UserData.MetaEntry</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>key</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+					<tr>
+						<td>value</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p></p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.VKLinkInfo">VKLinkInfo</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>ID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>VK Account ID</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>VK Display name</p></td>
+					</tr>
+				
+					<tr>
+						<td>AccessToken</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>VK OIDC Access Token</p></td>
+					</tr>
+				
+					<tr>
+						<td>Email</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>VK account email address</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.VerifyPasswordParams">VerifyPasswordParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>User</td>
+						<td><a href="#pubg.globalaccounts.UserData">UserData</a></td>
+						<td></td>
+						<td><p>Information about the end-user the request is for. Used for rate limiting and email translation.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Email</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The email address being logged into.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Password</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The password being used to log in to the account.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.VerifyTOTPCodeParams">VerifyTOTPCodeParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID of the account we're verifying the OTP code for.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Password</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Password of the account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Code</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The OTP code generated on the client side that we'll check the validity of.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.VkAuth">VkAuth</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID this Auth record represents</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The DisplayName of this VK account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Deactivated</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not this link is active.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Email</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Email address associated with this VK account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>VKID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The ID of this VK account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>CreatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was created, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>UpdatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was last updated, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>ProviderID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Provider ID used to look up this Authentication record.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.XboxAuth">XboxAuth</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID this Auth record represents</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Display Name of this XBox account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Deactivated</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not this link is active.</p></td>
+					</tr>
+				
+					<tr>
+						<td>XUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The ID of this XBox account.</p></td>
+					</tr>
+				
+					<tr>
+						<td>CreatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was created, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>UpdatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was last updated, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>ProviderID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Provider ID used to look up this Authentication record.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.XboxLinkInfo">XboxLinkInfo</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>XUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>XBox account ID</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>XBox display name</p></td>
+					</tr>
+				
+					<tr>
+						<td>AccessToken</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Xbox OIDC Access token</p></td>
+					</tr>
+				
+					<tr>
+						<td>RefreshToken</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Xbox OIDC Refresh Token</p></td>
+					</tr>
+				
+					<tr>
+						<td>ValidUntil</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the XBox OIDC tokens expire</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.YoutubeAuth">YoutubeAuth</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID this Auth record represents</p></td>
+					</tr>
+				
+					<tr>
+						<td>ProviderID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Provider ID used to look up this Authentication record.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Deactivated</td>
+						<td><a href="#bool">bool</a></td>
+						<td></td>
+						<td><p>Whether or not this link is active.</p></td>
+					</tr>
+				
+					<tr>
+						<td>CreatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was created, as Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>UpdatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>When the Local Auth was last updated, as Epoch time.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+
+	
+		<h3 id="pubg.globalaccounts.BackendErrCode">BackendErrCode</h3>
+		<p></p>
+		<table class="enum-table">
+			<thead>
+			<tr><td>Name</td><td>Number</td><td>Description</td></tr>
+			</thead>
+			<tbody>
+			
+				<tr>
+					<td>ErrAccountByIDNotFound</td>
+					<td>0</td>
+					<td><p>The GUID or ProviderID provided were not found.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrAccountByGUIDNotFound</td>
+					<td>1</td>
+					<td><p>The GUID provided was not found.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrAccountByEmailNotFound</td>
+					<td>2</td>
+					<td><p>The Email address provided is not associated with a Global Account.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrAccountByProviderIDNotFound</td>
+					<td>3</td>
+					<td><p>The ProviderID was not linked to a GlobalAccount.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrAccountDeactivated</td>
+					<td>4</td>
+					<td><p>The requested account is currently deactivated.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrAccountActivated</td>
+					<td>5</td>
+					<td><p>The request account is already activated.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrAccountOnHold</td>
+					<td>6</td>
+					<td><p>The requested account is on hold by Player Services.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrInvalidRefreshToken</td>
+					<td>7</td>
+					<td><p>The OIDC Refresh Token for this account link is invalid.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrInvalidActivationToken</td>
+					<td>8</td>
+					<td><p>The Activation Token provided was not accepted by the server.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrFailedEmailValidation</td>
+					<td>9</td>
+					<td><p>The email address provided is considered invalid by the server. NOTE: We do not allow registration with throwaway/temporary email providers.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrLocalAuthResetPasswordInvalidOldPassword</td>
+					<td>10</td>
+					<td><p>The password provided was incorrect.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrLocalAuthSetPasswordInvalidFormat</td>
+					<td>11</td>
+					<td><p>The password provided does not meet the password requirements.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrCouldNotDeleteAccount</td>
+					<td>12</td>
+					<td><p>An error occurred while deleting an account.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrFailedUpdateEmailOptIn</td>
+					<td>13</td>
+					<td><p>An error occurred while updating the EmailOptIn status of the account.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrFailedUpdatePersona</td>
+					<td>14</td>
+					<td><p>An error occurred while updating the Persona of the account.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrInvaildProvider</td>
+					<td>15</td>
+					<td><p>The Provider information was invalid.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrFailedCreateLink</td>
+					<td>16</td>
+					<td><p>An error occurred while attempting to linking accounts.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrFailedDeleteLink</td>
+					<td>17</td>
+					<td><p>An error occured while attempting to unlink accounts.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrCouldnotConvertAuth</td>
+					<td>18</td>
+					<td><p>The server encountered a type error with the data in this account.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrEmailDomainNotWhitelisted</td>
+					<td>19</td>
+					<td><p>The domain of the email address is not whitelisted for registration.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrTOSNotAccepted</td>
+					<td>20</td>
+					<td><p>The user did not accept the TOS so we cannot complete registration.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrInvalidDOB</td>
+					<td>21</td>
+					<td><p>The user's Date of Birth is not valid.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrInvalidEmailConfirm</td>
+					<td>22</td>
+					<td><p>Legacy error code, not currently in use.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrInvalidPassword</td>
+					<td>23</td>
+					<td><p>The password does not meet the password requirements.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrInvalidPasswordConfirm</td>
+					<td>24</td>
+					<td><p>The user's Password Confirmation did not match the provided Password.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrAccountAlreadyExists</td>
+					<td>25</td>
+					<td><p>The account being created already exists.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrIncorrectPassword</td>
+					<td>26</td>
+					<td><p>The password provided did not match the password saved on the specified account.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrAccountIsArealdyOnHolded</td>
+					<td>27</td>
+					<td><p>The account being set to On Hold is already On Hold.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrFailedUpdateOnHold</td>
+					<td>28</td>
+					<td><p>An error occurred while setting an account to On Hold.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrFailedUpdateLocked</td>
+					<td>29</td>
+					<td><p>An error occurred while attempting to lock an account.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrAccountLocked</td>
+					<td>30</td>
+					<td><p>The account is locked and cannot be modified.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrAccountUnconfirmed</td>
+					<td>31</td>
+					<td><p>The account's email address has not been confirmed.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrAccountAlreadyLinked</td>
+					<td>32</td>
+					<td><p>The account being linked is already linked to this or another account.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrLitePCLauncherRegistrationDisabled</td>
+					<td>33</td>
+					<td><p>Registrations originating from the LitePC launcher are currently disabled.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrInvalidLinkInfo</td>
+					<td>34</td>
+					<td><p>The information provided is not sufficient for creating an account link.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrEmailChangeNewEmailSameAsOld</td>
+					<td>35</td>
+					<td><p>The New and Old email addresses are the same.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrEmailChangeNewEmailAlreadyRegistered</td>
+					<td>36</td>
+					<td><p>The New email address is already registered to an account.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrEmailChangeOldEmailAlreadyChanged</td>
+					<td>37</td>
+					<td><p>The Old email address is no longer associated with the account.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrEmailChangeInvalidToken</td>
+					<td>38</td>
+					<td><p>The Email Change JWT provided was not accepted by the server.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrPasswordResetInvalidToken</td>
+					<td>39</td>
+					<td><p>The Password Reset JWt provided was not accepted by the server.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrLinkInfoMissing</td>
+					<td>40</td>
+					<td><p>The information provided is not sufficient for creating an account link.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrProviderAccountNotFound</td>
+					<td>41</td>
+					<td><p>The Provider account specified was not found.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrTSLProxyRequestFail</td>
+					<td>42</td>
+					<td><p>The Identity server was unable to talk to TSL.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrTSLPlatformAccountUnmarshalFail</td>
+					<td>43</td>
+					<td><p>The Identity server encountered an error parsing the response from TSL.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrTSLPlatformAccountEmptyResponse</td>
+					<td>44</td>
+					<td><p>The Identity server received an empty response from TSL.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrTSLPlatformAccountSummaryNotFound</td>
+					<td>45</td>
+					<td><p>No TSL account found.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrTSLPlatformAccountSummaryMissingData</td>
+					<td>46</td>
+					<td><p>TSL Account is missing information.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrAccountRecentlyUnlinked</td>
+					<td>47</td>
+					<td><p>When an account is unlinked we forbid linking a new account for a period of time to prevent abuse.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrTooManyRequestByIp</td>
+					<td>48</td>
+					<td><p>The IP address of the user is currently being rate limited.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrTooManyRequestByLogin</td>
+					<td>49</td>
+					<td><p>Logins to this account are currently being rate limited.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrTooManyRequestByForgotPassword</td>
+					<td>50</td>
+					<td><p>ForgotPassword requests for this account are currently being rate limited.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrNoPlatformsLinked</td>
+					<td>51</td>
+					<td><p>Linking this provider requires that a TSL Platform is linked first. This account has no TSL platforms linked.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrInvalidUsername</td>
+					<td>52</td>
+					<td><p>The Username does not meet the username requirements</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrUsernameTaken</td>
+					<td>53</td>
+					<td><p>The Username is already in use</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrAccountByUsernameNotFound</td>
+					<td>54</td>
+					<td><p>The requested username was not linked to an account</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrUsernameAlreadySet</td>
+					<td>55</td>
+					<td><p>The account already has a username set</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrInvalidCountry</td>
+					<td>56</td>
+					<td><p>The Country Code is invalid</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrMagicLinkCodeInvalid</td>
+					<td>57</td>
+					<td><p>The provided magiclink code was invalid or expired</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrMagicLinkNotComplete</td>
+					<td>58</td>
+					<td><p>The provided magicLink code has not completed it's respective link</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrInvalidCreatorCode</td>
+					<td>59</td>
+					<td><p>The given creator code is invalid.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrProviderLocked</td>
+					<td>60</td>
+					<td><p>For certain Auth Providers you're only allowed to link a single Provider Account with your Global Account. You can deactivate your link, but you'll only be able to re-link with that same provider account. PS has the ability to unlock this provider by deactivating this link in ACPV.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrTooManyRequestByChangeEmail</td>
+					<td>61</td>
+					<td><p>ChangeEmail requests for this account are currently being rate limited.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrCouldNotGetIpLogs</td>
+					<td>62</td>
+					<td><p>occurs error at getting iplog</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrCouldNotGetSessionLogs</td>
+					<td>63</td>
+					<td><p>occurs error at getting session table</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrCreatorCodeRequired</td>
+					<td>64</td>
+					<td><p>Creator code link is required for this action.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrPromotionNotFound</td>
+					<td>65</td>
+					<td><p>Promotion for given ID could not be found.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrPromotionNotActive</td>
+					<td>66</td>
+					<td><p>Promotion is not active.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrPromotionNoCodesAvailable</td>
+					<td>67</td>
+					<td><p>Promotion has no more available codes.</p></td>
+				</tr>
+			
+				<tr>
+					<td>Success</td>
+					<td>200</td>
+					<td><p>Everything went to plan.</p></td>
+				</tr>
+			
+			</tbody>
+		</table>
+	
+
+	
+
+
+<h2 id="scalar-value-types">Scalar Value Types</h2>
+<table class="scalar-value-types-table">
+	<thead>
+	<tr><td>.proto Type</td><td>Notes</td><td>C++</td><td>Java</td><td>Python</td><td>Go</td><td>C#</td><td>PHP</td><td>Ruby</td></tr>
+	</thead>
+	<tbody>
+	
+		<tr id="double">
+			<td>double</td>
+			<td></td>
+			<td>double</td>
+			<td>double</td>
+			<td>float</td>
+			<td>float64</td>
+			<td>double</td>
+			<td>float</td>
+			<td>Float</td>
+		</tr>
+	
+		<tr id="float">
+			<td>float</td>
+			<td></td>
+			<td>float</td>
+			<td>float</td>
+			<td>float</td>
+			<td>float32</td>
+			<td>float</td>
+			<td>float</td>
+			<td>Float</td>
+		</tr>
+	
+		<tr id="int32">
+			<td>int32</td>
+			<td>Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint32 instead.</td>
+			<td>int32</td>
+			<td>int</td>
+			<td>int</td>
+			<td>int32</td>
+			<td>int</td>
+			<td>integer</td>
+			<td>Bignum or Fixnum (as required)</td>
+		</tr>
+	
+		<tr id="int64">
+			<td>int64</td>
+			<td>Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint64 instead.</td>
+			<td>int64</td>
+			<td>long</td>
+			<td>int/long</td>
+			<td>int64</td>
+			<td>long</td>
+			<td>integer/string</td>
+			<td>Bignum</td>
+		</tr>
+	
+		<tr id="uint32">
+			<td>uint32</td>
+			<td>Uses variable-length encoding.</td>
+			<td>uint32</td>
+			<td>int</td>
+			<td>int/long</td>
+			<td>uint32</td>
+			<td>uint</td>
+			<td>integer</td>
+			<td>Bignum or Fixnum (as required)</td>
+		</tr>
+	
+		<tr id="uint64">
+			<td>uint64</td>
+			<td>Uses variable-length encoding.</td>
+			<td>uint64</td>
+			<td>long</td>
+			<td>int/long</td>
+			<td>uint64</td>
+			<td>ulong</td>
+			<td>integer/string</td>
+			<td>Bignum or Fixnum (as required)</td>
+		</tr>
+	
+		<tr id="sint32">
+			<td>sint32</td>
+			<td>Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int32s.</td>
+			<td>int32</td>
+			<td>int</td>
+			<td>int</td>
+			<td>int32</td>
+			<td>int</td>
+			<td>integer</td>
+			<td>Bignum or Fixnum (as required)</td>
+		</tr>
+	
+		<tr id="sint64">
+			<td>sint64</td>
+			<td>Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int64s.</td>
+			<td>int64</td>
+			<td>long</td>
+			<td>int/long</td>
+			<td>int64</td>
+			<td>long</td>
+			<td>integer/string</td>
+			<td>Bignum</td>
+		</tr>
+	
+		<tr id="fixed32">
+			<td>fixed32</td>
+			<td>Always four bytes. More efficient than uint32 if values are often greater than 2^28.</td>
+			<td>uint32</td>
+			<td>int</td>
+			<td>int</td>
+			<td>uint32</td>
+			<td>uint</td>
+			<td>integer</td>
+			<td>Bignum or Fixnum (as required)</td>
+		</tr>
+	
+		<tr id="fixed64">
+			<td>fixed64</td>
+			<td>Always eight bytes. More efficient than uint64 if values are often greater than 2^56.</td>
+			<td>uint64</td>
+			<td>long</td>
+			<td>int/long</td>
+			<td>uint64</td>
+			<td>ulong</td>
+			<td>integer/string</td>
+			<td>Bignum</td>
+		</tr>
+	
+		<tr id="sfixed32">
+			<td>sfixed32</td>
+			<td>Always four bytes.</td>
+			<td>int32</td>
+			<td>int</td>
+			<td>int</td>
+			<td>int32</td>
+			<td>int</td>
+			<td>integer</td>
+			<td>Bignum or Fixnum (as required)</td>
+		</tr>
+	
+		<tr id="sfixed64">
+			<td>sfixed64</td>
+			<td>Always eight bytes.</td>
+			<td>int64</td>
+			<td>long</td>
+			<td>int/long</td>
+			<td>int64</td>
+			<td>long</td>
+			<td>integer/string</td>
+			<td>Bignum</td>
+		</tr>
+	
+		<tr id="bool">
+			<td>bool</td>
+			<td></td>
+			<td>bool</td>
+			<td>boolean</td>
+			<td>boolean</td>
+			<td>bool</td>
+			<td>bool</td>
+			<td>boolean</td>
+			<td>TrueClass/FalseClass</td>
+		</tr>
+	
+		<tr id="string">
+			<td>string</td>
+			<td>A string must always contain UTF-8 encoded or 7-bit ASCII text.</td>
+			<td>string</td>
+			<td>String</td>
+			<td>str/unicode</td>
+			<td>string</td>
+			<td>string</td>
+			<td>string</td>
+			<td>String (UTF-8)</td>
+		</tr>
+	
+		<tr id="bytes">
+			<td>bytes</td>
+			<td>May contain any arbitrary sequence of bytes.</td>
+			<td>string</td>
+			<td>ByteString</td>
+			<td>str</td>
+			<td>[]byte</td>
+			<td>ByteString</td>
+			<td>string</td>
+			<td>String (ASCII-8BIT)</td>
+		</tr>
+	
+	</tbody>
+</table>
+</body>
+</html>
