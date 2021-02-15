@@ -7,6 +7,9 @@ const getServiceMethodName = (fn: any): string => {
 	if (fn === pubg.globalaccounts.Identity.prototype.createGlobalAccount) {
 		return 'CreateGlobalAccount';
     }
+	if (fn === pubg.globalaccounts.Identity.prototype.findOrInitGPPAccount) {
+		return 'FindOrInitGPPAccount';
+    }
 	if (fn === pubg.globalaccounts.Identity.prototype.deleteGlobalAccount) {
 		return 'DeleteGlobalAccount';
     }

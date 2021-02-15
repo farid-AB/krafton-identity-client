@@ -8,6 +8,8 @@ export namespace pubg {
             public static create(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean): Identity;
             public createGlobalAccount(request: pubg.globalaccounts.ICreateAccountParams, callback: pubg.globalaccounts.Identity.CreateGlobalAccountCallback): void;
             public createGlobalAccount(request: pubg.globalaccounts.ICreateAccountParams): Promise<pubg.globalaccounts.GlobalAccountResponse>;
+            public findOrInitGPPAccount(request: pubg.globalaccounts.IFindOrInitGPPAccountParams, callback: pubg.globalaccounts.Identity.FindOrInitGPPAccountCallback): void;
+            public findOrInitGPPAccount(request: pubg.globalaccounts.IFindOrInitGPPAccountParams): Promise<pubg.globalaccounts.GPPAccountResponse>;
             public deleteGlobalAccount(request: pubg.globalaccounts.IDeleteAccountParams, callback: pubg.globalaccounts.Identity.DeleteGlobalAccountCallback): void;
             public deleteGlobalAccount(request: pubg.globalaccounts.IDeleteAccountParams): Promise<pubg.globalaccounts.StatusResponse>;
             public getGlobalAccount(request: pubg.globalaccounts.ICriteriaQuery, callback: pubg.globalaccounts.Identity.GetGlobalAccountCallback): void;
@@ -87,6 +89,8 @@ export namespace pubg {
         namespace Identity {
 
             type CreateGlobalAccountCallback = (error: (Error|null), response?: pubg.globalaccounts.GlobalAccountResponse) => void;
+
+            type FindOrInitGPPAccountCallback = (error: (Error|null), response?: pubg.globalaccounts.GPPAccountResponse) => void;
 
             type DeleteGlobalAccountCallback = (error: (Error|null), response?: pubg.globalaccounts.StatusResponse) => void;
 
@@ -224,6 +228,50 @@ export namespace pubg {
             public static verify(message: { [k: string]: any }): (string|null);
             public static fromObject(object: { [k: string]: any }): pubg.globalaccounts.CreateAccountParams;
             public static toObject(message: pubg.globalaccounts.CreateAccountParams, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public toJSON(): { [k: string]: any };
+        }
+
+        interface IFindOrInitGPPAccountParams {
+            AuthProvider?: (string|null);
+            AuthProviderID?: (string|null);
+            GameAccountID?: (string|null);
+        }
+
+        class FindOrInitGPPAccountParams implements IFindOrInitGPPAccountParams {
+            constructor(properties?: pubg.globalaccounts.IFindOrInitGPPAccountParams);
+            public AuthProvider: string;
+            public AuthProviderID: string;
+            public GameAccountID: string;
+            public static create(properties?: pubg.globalaccounts.IFindOrInitGPPAccountParams): pubg.globalaccounts.FindOrInitGPPAccountParams;
+            public static encode(message: pubg.globalaccounts.IFindOrInitGPPAccountParams, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: pubg.globalaccounts.IFindOrInitGPPAccountParams, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): pubg.globalaccounts.FindOrInitGPPAccountParams;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): pubg.globalaccounts.FindOrInitGPPAccountParams;
+            public static verify(message: { [k: string]: any }): (string|null);
+            public static fromObject(object: { [k: string]: any }): pubg.globalaccounts.FindOrInitGPPAccountParams;
+            public static toObject(message: pubg.globalaccounts.FindOrInitGPPAccountParams, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public toJSON(): { [k: string]: any };
+        }
+
+        interface IGPPAccountResponse {
+            Code?: (pubg.globalaccounts.BackendErrCode|null);
+            Message?: (string|null);
+            Account?: (pubg.globalaccounts.IGlobalAccount|null);
+        }
+
+        class GPPAccountResponse implements IGPPAccountResponse {
+            constructor(properties?: pubg.globalaccounts.IGPPAccountResponse);
+            public Code: pubg.globalaccounts.BackendErrCode;
+            public Message: string;
+            public Account?: (pubg.globalaccounts.IGlobalAccount|null);
+            public static create(properties?: pubg.globalaccounts.IGPPAccountResponse): pubg.globalaccounts.GPPAccountResponse;
+            public static encode(message: pubg.globalaccounts.IGPPAccountResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: pubg.globalaccounts.IGPPAccountResponse, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): pubg.globalaccounts.GPPAccountResponse;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): pubg.globalaccounts.GPPAccountResponse;
+            public static verify(message: { [k: string]: any }): (string|null);
+            public static fromObject(object: { [k: string]: any }): pubg.globalaccounts.GPPAccountResponse;
+            public static toObject(message: pubg.globalaccounts.GPPAccountResponse, options?: $protobuf.IConversionOptions): { [k: string]: any };
             public toJSON(): { [k: string]: any };
         }
 
@@ -1538,6 +1586,7 @@ export namespace pubg {
             Authentications?: (pubg.globalaccounts.IAuthenticationData|null);
             Platforms?: ({ [k: string]: pubg.globalaccounts.IPlatformAccount }|null);
             Profile?: (pubg.globalaccounts.IProfile|null);
+            GameAccounts?: (pubg.globalaccounts.IGameAccount[]|null);
         }
 
         class GlobalAccount implements IGlobalAccount {
@@ -1550,6 +1599,7 @@ export namespace pubg {
             public Authentications?: (pubg.globalaccounts.IAuthenticationData|null);
             public Platforms: { [k: string]: pubg.globalaccounts.IPlatformAccount };
             public Profile?: (pubg.globalaccounts.IProfile|null);
+            public GameAccounts: pubg.globalaccounts.IGameAccount[];
             public static create(properties?: pubg.globalaccounts.IGlobalAccount): pubg.globalaccounts.GlobalAccount;
             public static encode(message: pubg.globalaccounts.IGlobalAccount, writer?: $protobuf.Writer): $protobuf.Writer;
             public static encodeDelimited(message: pubg.globalaccounts.IGlobalAccount, writer?: $protobuf.Writer): $protobuf.Writer;
@@ -2370,6 +2420,7 @@ export namespace pubg {
             ErrPromotionNotFound = 65,
             ErrPromotionNotActive = 66,
             ErrPromotionNoCodesAvailable = 67,
+            ErrUnknownEventTypeFromMailjet = 68,
             Success = 200
         }
 
@@ -2398,6 +2449,38 @@ export namespace pubg {
             public static verify(message: { [k: string]: any }): (string|null);
             public static fromObject(object: { [k: string]: any }): pubg.globalaccounts.PlatformAccount;
             public static toObject(message: pubg.globalaccounts.PlatformAccount, options?: $protobuf.IConversionOptions): { [k: string]: any };
+            public toJSON(): { [k: string]: any };
+        }
+
+        interface IGameAccount {
+            GUID?: (string|null);
+            ProviderID?: (string|null);
+            PlatformID?: (string|null);
+            AuthProvider?: (string|null);
+            AuthProviderID?: (string|null);
+            DisplayName?: (string|null);
+            CreatedAt?: (number|Long|null);
+            UpdatedAt?: (number|Long|null);
+        }
+
+        class GameAccount implements IGameAccount {
+            constructor(properties?: pubg.globalaccounts.IGameAccount);
+            public GUID: string;
+            public ProviderID: string;
+            public PlatformID: string;
+            public AuthProvider: string;
+            public AuthProviderID: string;
+            public DisplayName: string;
+            public CreatedAt: (number|Long);
+            public UpdatedAt: (number|Long);
+            public static create(properties?: pubg.globalaccounts.IGameAccount): pubg.globalaccounts.GameAccount;
+            public static encode(message: pubg.globalaccounts.IGameAccount, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static encodeDelimited(message: pubg.globalaccounts.IGameAccount, writer?: $protobuf.Writer): $protobuf.Writer;
+            public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): pubg.globalaccounts.GameAccount;
+            public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): pubg.globalaccounts.GameAccount;
+            public static verify(message: { [k: string]: any }): (string|null);
+            public static fromObject(object: { [k: string]: any }): pubg.globalaccounts.GameAccount;
+            public static toObject(message: pubg.globalaccounts.GameAccount, options?: $protobuf.IConversionOptions): { [k: string]: any };
             public toJSON(): { [k: string]: any };
         }
     }

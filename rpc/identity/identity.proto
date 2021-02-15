@@ -43,6 +43,17 @@ service Identity {
     */
     rpc CreateGlobalAccount (CreateAccountParams) returns (GlobalAccountResponse);
     /*
+    Attempts to find a Global Account record using the provided identifiers. If none is found then we create a new Platform
+    record with its own GUID and return that information.
+
+    <b>Possible Error Codes:</b>
+    <pre>
+    - Success
+    </pre>
+    (See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)
+    */
+    rpc FindOrInitGPPAccount (FindOrInitGPPAccountParams) returns (GPPAccountResponse);
+    /*
     Removes all of an account's records from the database. This CANNOT be undone.
 
     <b>Possible Error Codes:</b>
@@ -471,6 +482,28 @@ message CreateAccountParams {
     string Username = 14;
 }
 
+message FindOrInitGPPAccountParams {
+    // The name of the service that the AuthProviderID is valid for, ("steam", "xbox", "psn", etc.)
+    string AuthProvider = 1;
+    // The user's ID in the auth provider's system (SteamID64, XUID, PSNID, etc.)
+    string AuthProviderID = 2;
+    // Optional: The ID of the user's account in the GPP system. If blank the generated Global Account ID will be used.
+    string GameAccountID = 3;
+}
+
+message GPPAccountResponse {
+    /*
+    Indicates the outcome of the request.
+    Individual methods should document what values may be returned here.
+    See the "BackendErrCode" enum for all possible values.
+    */
+    BackendErrCode Code = 1;
+    // May contain a message about the response.
+    string Message = 2;
+    // Details about the account that was found or created.
+    GlobalAccount Account = 3;
+}
+
 message AuthLinkInfo {
     // Indicates which of the LinkInfo fields is filled out
     string Provider = 1;
@@ -734,6 +767,7 @@ message CriteriaQuery {
     Possible values:
     - guid
     - provider_id
+    - platform_id
     */
     string CriteriaType = 2;
 }
@@ -1118,10 +1152,12 @@ message GlobalAccount {
     bool EmailOptIn = 5;
     // All third-party accounts that are linked to this Global Account.
     AuthenticationData Authentications = 6;
-    // PUBG Platform accounts linked to this GlobalAccount.
+    // PUBG Game accounts linked to this GlobalAccount.
     map<string, PlatformAccount> Platforms = 7;
     // Profile information for this GlobalAccount.
     Profile Profile = 8;
+    // Headless Game Accounts associated with this Global Account
+    repeated GameAccount GameAccounts = 9;
 }
 
 message AuthenticationData {
@@ -1724,6 +1760,8 @@ enum BackendErrCode {
     ErrPromotionNotActive = 66;
     // Promotion has no more available codes.
     ErrPromotionNoCodesAvailable = 67;
+    // Unknown event type from mailjet, support only `spam`, `unsub`
+    ErrUnknownEventTypeFromMailjet = 68;
     // Everything went to plan.
     Success = 200;
 }
@@ -1742,4 +1780,24 @@ message PlatformAccount {
     int64 CreatedAt = 5;
     // The time when this link was last updated, Epoch time.
     int64 UpdatedAt = 6;
+}
+
+// A GameAccount links a Game-specific account to a GlobalAccount through an Authentication Provider.
+message GameAccount {
+    // The Global Account ID this link belongs to.
+    string GUID = 1;
+    // The unique ID of this GameAccount record
+    string ProviderID = 2;
+    // The Game Account ID.
+    string PlatformID = 3;
+    // The Auth Provider that the AuthProvier ID is scoped to (xbox, steam, psn, etc.)
+    string AuthProvider = 4;
+    // The user's ID in the associated auth provider (XBox ID, PSN ID, etc.)
+    string AuthProviderID = 5;
+    // The player's IGN
+    string DisplayName = 6;
+    // The time when this record was created, Epoch time.
+    int64 CreatedAt = 7;
+    // The time when this record was last updated, Epoch time.
+    int64 UpdatedAt = 8;
 }

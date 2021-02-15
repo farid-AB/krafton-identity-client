@@ -93,6 +93,39 @@ $root.pubg = (function() {
              */
 
             /**
+             * Callback as used by {@link pubg.globalaccounts.Identity#findOrInitGPPAccount}.
+             * @memberof pubg.globalaccounts.Identity
+             * @typedef FindOrInitGPPAccountCallback
+             * @type {function}
+             * @param {Error|null} error Error, if any
+             * @param {pubg.globalaccounts.GPPAccountResponse} [response] GPPAccountResponse
+             */
+
+            /**
+             * Calls FindOrInitGPPAccount.
+             * @function findOrInitGPPAccount
+             * @memberof pubg.globalaccounts.Identity
+             * @instance
+             * @param {pubg.globalaccounts.IFindOrInitGPPAccountParams} request FindOrInitGPPAccountParams message or plain object
+             * @param {pubg.globalaccounts.Identity.FindOrInitGPPAccountCallback} callback Node-style callback called with the error, if any, and GPPAccountResponse
+             * @returns {undefined}
+             * @variation 1
+             */
+            Object.defineProperty(Identity.prototype.findOrInitGPPAccount = function findOrInitGPPAccount(request, callback) {
+                return this.rpcCall(findOrInitGPPAccount, $root.pubg.globalaccounts.FindOrInitGPPAccountParams, $root.pubg.globalaccounts.GPPAccountResponse, request, callback);
+            }, "name", { value: "FindOrInitGPPAccount" });
+
+            /**
+             * Calls FindOrInitGPPAccount.
+             * @function findOrInitGPPAccount
+             * @memberof pubg.globalaccounts.Identity
+             * @instance
+             * @param {pubg.globalaccounts.IFindOrInitGPPAccountParams} request FindOrInitGPPAccountParams message or plain object
+             * @returns {Promise<pubg.globalaccounts.GPPAccountResponse>} Promise
+             * @variation 2
+             */
+
+            /**
              * Callback as used by {@link pubg.globalaccounts.Identity#deleteGlobalAccount}.
              * @memberof pubg.globalaccounts.Identity
              * @typedef DeleteGlobalAccountCallback
@@ -2044,6 +2077,828 @@ $root.pubg = (function() {
             };
 
             return CreateAccountParams;
+        })();
+
+        globalaccounts.FindOrInitGPPAccountParams = (function() {
+
+            /**
+             * Properties of a FindOrInitGPPAccountParams.
+             * @memberof pubg.globalaccounts
+             * @interface IFindOrInitGPPAccountParams
+             * @property {string|null} [AuthProvider] FindOrInitGPPAccountParams AuthProvider
+             * @property {string|null} [AuthProviderID] FindOrInitGPPAccountParams AuthProviderID
+             * @property {string|null} [GameAccountID] FindOrInitGPPAccountParams GameAccountID
+             */
+
+            /**
+             * Constructs a new FindOrInitGPPAccountParams.
+             * @memberof pubg.globalaccounts
+             * @classdesc Represents a FindOrInitGPPAccountParams.
+             * @implements IFindOrInitGPPAccountParams
+             * @constructor
+             * @param {pubg.globalaccounts.IFindOrInitGPPAccountParams=} [properties] Properties to set
+             */
+            function FindOrInitGPPAccountParams(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * FindOrInitGPPAccountParams AuthProvider.
+             * @member {string} AuthProvider
+             * @memberof pubg.globalaccounts.FindOrInitGPPAccountParams
+             * @instance
+             */
+            FindOrInitGPPAccountParams.prototype.AuthProvider = "";
+
+            /**
+             * FindOrInitGPPAccountParams AuthProviderID.
+             * @member {string} AuthProviderID
+             * @memberof pubg.globalaccounts.FindOrInitGPPAccountParams
+             * @instance
+             */
+            FindOrInitGPPAccountParams.prototype.AuthProviderID = "";
+
+            /**
+             * FindOrInitGPPAccountParams GameAccountID.
+             * @member {string} GameAccountID
+             * @memberof pubg.globalaccounts.FindOrInitGPPAccountParams
+             * @instance
+             */
+            FindOrInitGPPAccountParams.prototype.GameAccountID = "";
+
+            /**
+             * Creates a new FindOrInitGPPAccountParams instance using the specified properties.
+             * @function create
+             * @memberof pubg.globalaccounts.FindOrInitGPPAccountParams
+             * @static
+             * @param {pubg.globalaccounts.IFindOrInitGPPAccountParams=} [properties] Properties to set
+             * @returns {pubg.globalaccounts.FindOrInitGPPAccountParams} FindOrInitGPPAccountParams instance
+             */
+            FindOrInitGPPAccountParams.create = function create(properties) {
+                return new FindOrInitGPPAccountParams(properties);
+            };
+
+            /**
+             * Encodes the specified FindOrInitGPPAccountParams message. Does not implicitly {@link pubg.globalaccounts.FindOrInitGPPAccountParams.verify|verify} messages.
+             * @function encode
+             * @memberof pubg.globalaccounts.FindOrInitGPPAccountParams
+             * @static
+             * @param {pubg.globalaccounts.IFindOrInitGPPAccountParams} message FindOrInitGPPAccountParams message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            FindOrInitGPPAccountParams.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.AuthProvider != null && message.hasOwnProperty("AuthProvider"))
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.AuthProvider);
+                if (message.AuthProviderID != null && message.hasOwnProperty("AuthProviderID"))
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.AuthProviderID);
+                if (message.GameAccountID != null && message.hasOwnProperty("GameAccountID"))
+                    writer.uint32(/* id 3, wireType 2 =*/26).string(message.GameAccountID);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified FindOrInitGPPAccountParams message, length delimited. Does not implicitly {@link pubg.globalaccounts.FindOrInitGPPAccountParams.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof pubg.globalaccounts.FindOrInitGPPAccountParams
+             * @static
+             * @param {pubg.globalaccounts.IFindOrInitGPPAccountParams} message FindOrInitGPPAccountParams message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            FindOrInitGPPAccountParams.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes a FindOrInitGPPAccountParams message from the specified reader or buffer.
+             * @function decode
+             * @memberof pubg.globalaccounts.FindOrInitGPPAccountParams
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {pubg.globalaccounts.FindOrInitGPPAccountParams} FindOrInitGPPAccountParams
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            FindOrInitGPPAccountParams.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.pubg.globalaccounts.FindOrInitGPPAccountParams();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        message.AuthProvider = reader.string();
+                        break;
+                    case 2:
+                        message.AuthProviderID = reader.string();
+                        break;
+                    case 3:
+                        message.GameAccountID = reader.string();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Decodes a FindOrInitGPPAccountParams message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof pubg.globalaccounts.FindOrInitGPPAccountParams
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {pubg.globalaccounts.FindOrInitGPPAccountParams} FindOrInitGPPAccountParams
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            FindOrInitGPPAccountParams.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a FindOrInitGPPAccountParams message.
+             * @function verify
+             * @memberof pubg.globalaccounts.FindOrInitGPPAccountParams
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            FindOrInitGPPAccountParams.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.AuthProvider != null && message.hasOwnProperty("AuthProvider"))
+                    if (!$util.isString(message.AuthProvider))
+                        return "AuthProvider: string expected";
+                if (message.AuthProviderID != null && message.hasOwnProperty("AuthProviderID"))
+                    if (!$util.isString(message.AuthProviderID))
+                        return "AuthProviderID: string expected";
+                if (message.GameAccountID != null && message.hasOwnProperty("GameAccountID"))
+                    if (!$util.isString(message.GameAccountID))
+                        return "GameAccountID: string expected";
+                return null;
+            };
+
+            /**
+             * Creates a FindOrInitGPPAccountParams message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof pubg.globalaccounts.FindOrInitGPPAccountParams
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {pubg.globalaccounts.FindOrInitGPPAccountParams} FindOrInitGPPAccountParams
+             */
+            FindOrInitGPPAccountParams.fromObject = function fromObject(object) {
+                if (object instanceof $root.pubg.globalaccounts.FindOrInitGPPAccountParams)
+                    return object;
+                var message = new $root.pubg.globalaccounts.FindOrInitGPPAccountParams();
+                if (object.AuthProvider != null)
+                    message.AuthProvider = String(object.AuthProvider);
+                if (object.AuthProviderID != null)
+                    message.AuthProviderID = String(object.AuthProviderID);
+                if (object.GameAccountID != null)
+                    message.GameAccountID = String(object.GameAccountID);
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a FindOrInitGPPAccountParams message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof pubg.globalaccounts.FindOrInitGPPAccountParams
+             * @static
+             * @param {pubg.globalaccounts.FindOrInitGPPAccountParams} message FindOrInitGPPAccountParams
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            FindOrInitGPPAccountParams.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.AuthProvider = "";
+                    object.AuthProviderID = "";
+                    object.GameAccountID = "";
+                }
+                if (message.AuthProvider != null && message.hasOwnProperty("AuthProvider"))
+                    object.AuthProvider = message.AuthProvider;
+                if (message.AuthProviderID != null && message.hasOwnProperty("AuthProviderID"))
+                    object.AuthProviderID = message.AuthProviderID;
+                if (message.GameAccountID != null && message.hasOwnProperty("GameAccountID"))
+                    object.GameAccountID = message.GameAccountID;
+                return object;
+            };
+
+            /**
+             * Converts this FindOrInitGPPAccountParams to JSON.
+             * @function toJSON
+             * @memberof pubg.globalaccounts.FindOrInitGPPAccountParams
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            FindOrInitGPPAccountParams.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            return FindOrInitGPPAccountParams;
+        })();
+
+        globalaccounts.GPPAccountResponse = (function() {
+
+            /**
+             * Properties of a GPPAccountResponse.
+             * @memberof pubg.globalaccounts
+             * @interface IGPPAccountResponse
+             * @property {pubg.globalaccounts.BackendErrCode|null} [Code] GPPAccountResponse Code
+             * @property {string|null} [Message] GPPAccountResponse Message
+             * @property {pubg.globalaccounts.IGlobalAccount|null} [Account] GPPAccountResponse Account
+             */
+
+            /**
+             * Constructs a new GPPAccountResponse.
+             * @memberof pubg.globalaccounts
+             * @classdesc Represents a GPPAccountResponse.
+             * @implements IGPPAccountResponse
+             * @constructor
+             * @param {pubg.globalaccounts.IGPPAccountResponse=} [properties] Properties to set
+             */
+            function GPPAccountResponse(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * GPPAccountResponse Code.
+             * @member {pubg.globalaccounts.BackendErrCode} Code
+             * @memberof pubg.globalaccounts.GPPAccountResponse
+             * @instance
+             */
+            GPPAccountResponse.prototype.Code = 0;
+
+            /**
+             * GPPAccountResponse Message.
+             * @member {string} Message
+             * @memberof pubg.globalaccounts.GPPAccountResponse
+             * @instance
+             */
+            GPPAccountResponse.prototype.Message = "";
+
+            /**
+             * GPPAccountResponse Account.
+             * @member {pubg.globalaccounts.IGlobalAccount|null|undefined} Account
+             * @memberof pubg.globalaccounts.GPPAccountResponse
+             * @instance
+             */
+            GPPAccountResponse.prototype.Account = null;
+
+            /**
+             * Creates a new GPPAccountResponse instance using the specified properties.
+             * @function create
+             * @memberof pubg.globalaccounts.GPPAccountResponse
+             * @static
+             * @param {pubg.globalaccounts.IGPPAccountResponse=} [properties] Properties to set
+             * @returns {pubg.globalaccounts.GPPAccountResponse} GPPAccountResponse instance
+             */
+            GPPAccountResponse.create = function create(properties) {
+                return new GPPAccountResponse(properties);
+            };
+
+            /**
+             * Encodes the specified GPPAccountResponse message. Does not implicitly {@link pubg.globalaccounts.GPPAccountResponse.verify|verify} messages.
+             * @function encode
+             * @memberof pubg.globalaccounts.GPPAccountResponse
+             * @static
+             * @param {pubg.globalaccounts.IGPPAccountResponse} message GPPAccountResponse message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GPPAccountResponse.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.Code != null && message.hasOwnProperty("Code"))
+                    writer.uint32(/* id 1, wireType 0 =*/8).int32(message.Code);
+                if (message.Message != null && message.hasOwnProperty("Message"))
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.Message);
+                if (message.Account != null && message.hasOwnProperty("Account"))
+                    $root.pubg.globalaccounts.GlobalAccount.encode(message.Account, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                return writer;
+            };
+
+            /**
+             * Encodes the specified GPPAccountResponse message, length delimited. Does not implicitly {@link pubg.globalaccounts.GPPAccountResponse.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof pubg.globalaccounts.GPPAccountResponse
+             * @static
+             * @param {pubg.globalaccounts.IGPPAccountResponse} message GPPAccountResponse message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GPPAccountResponse.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes a GPPAccountResponse message from the specified reader or buffer.
+             * @function decode
+             * @memberof pubg.globalaccounts.GPPAccountResponse
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {pubg.globalaccounts.GPPAccountResponse} GPPAccountResponse
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GPPAccountResponse.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.pubg.globalaccounts.GPPAccountResponse();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        message.Code = reader.int32();
+                        break;
+                    case 2:
+                        message.Message = reader.string();
+                        break;
+                    case 3:
+                        message.Account = $root.pubg.globalaccounts.GlobalAccount.decode(reader, reader.uint32());
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Decodes a GPPAccountResponse message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof pubg.globalaccounts.GPPAccountResponse
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {pubg.globalaccounts.GPPAccountResponse} GPPAccountResponse
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GPPAccountResponse.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a GPPAccountResponse message.
+             * @function verify
+             * @memberof pubg.globalaccounts.GPPAccountResponse
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            GPPAccountResponse.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.Code != null && message.hasOwnProperty("Code"))
+                    switch (message.Code) {
+                    default:
+                        return "Code: enum value expected";
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:
+                    case 6:
+                    case 7:
+                    case 8:
+                    case 9:
+                    case 10:
+                    case 11:
+                    case 12:
+                    case 13:
+                    case 14:
+                    case 15:
+                    case 16:
+                    case 17:
+                    case 18:
+                    case 19:
+                    case 20:
+                    case 21:
+                    case 22:
+                    case 23:
+                    case 24:
+                    case 25:
+                    case 26:
+                    case 27:
+                    case 28:
+                    case 29:
+                    case 30:
+                    case 31:
+                    case 32:
+                    case 33:
+                    case 34:
+                    case 35:
+                    case 36:
+                    case 37:
+                    case 38:
+                    case 39:
+                    case 40:
+                    case 41:
+                    case 42:
+                    case 43:
+                    case 44:
+                    case 45:
+                    case 46:
+                    case 47:
+                    case 48:
+                    case 49:
+                    case 50:
+                    case 51:
+                    case 52:
+                    case 53:
+                    case 54:
+                    case 55:
+                    case 56:
+                    case 57:
+                    case 58:
+                    case 59:
+                    case 60:
+                    case 61:
+                    case 62:
+                    case 63:
+                    case 64:
+                    case 65:
+                    case 66:
+                    case 67:
+                    case 68:
+                    case 200:
+                        break;
+                    }
+                if (message.Message != null && message.hasOwnProperty("Message"))
+                    if (!$util.isString(message.Message))
+                        return "Message: string expected";
+                if (message.Account != null && message.hasOwnProperty("Account")) {
+                    var error = $root.pubg.globalaccounts.GlobalAccount.verify(message.Account);
+                    if (error)
+                        return "Account." + error;
+                }
+                return null;
+            };
+
+            /**
+             * Creates a GPPAccountResponse message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof pubg.globalaccounts.GPPAccountResponse
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {pubg.globalaccounts.GPPAccountResponse} GPPAccountResponse
+             */
+            GPPAccountResponse.fromObject = function fromObject(object) {
+                if (object instanceof $root.pubg.globalaccounts.GPPAccountResponse)
+                    return object;
+                var message = new $root.pubg.globalaccounts.GPPAccountResponse();
+                switch (object.Code) {
+                case "ErrAccountByIDNotFound":
+                case 0:
+                    message.Code = 0;
+                    break;
+                case "ErrAccountByGUIDNotFound":
+                case 1:
+                    message.Code = 1;
+                    break;
+                case "ErrAccountByEmailNotFound":
+                case 2:
+                    message.Code = 2;
+                    break;
+                case "ErrAccountByProviderIDNotFound":
+                case 3:
+                    message.Code = 3;
+                    break;
+                case "ErrAccountDeactivated":
+                case 4:
+                    message.Code = 4;
+                    break;
+                case "ErrAccountActivated":
+                case 5:
+                    message.Code = 5;
+                    break;
+                case "ErrAccountOnHold":
+                case 6:
+                    message.Code = 6;
+                    break;
+                case "ErrInvalidRefreshToken":
+                case 7:
+                    message.Code = 7;
+                    break;
+                case "ErrInvalidActivationToken":
+                case 8:
+                    message.Code = 8;
+                    break;
+                case "ErrFailedEmailValidation":
+                case 9:
+                    message.Code = 9;
+                    break;
+                case "ErrLocalAuthResetPasswordInvalidOldPassword":
+                case 10:
+                    message.Code = 10;
+                    break;
+                case "ErrLocalAuthSetPasswordInvalidFormat":
+                case 11:
+                    message.Code = 11;
+                    break;
+                case "ErrCouldNotDeleteAccount":
+                case 12:
+                    message.Code = 12;
+                    break;
+                case "ErrFailedUpdateEmailOptIn":
+                case 13:
+                    message.Code = 13;
+                    break;
+                case "ErrFailedUpdatePersona":
+                case 14:
+                    message.Code = 14;
+                    break;
+                case "ErrInvaildProvider":
+                case 15:
+                    message.Code = 15;
+                    break;
+                case "ErrFailedCreateLink":
+                case 16:
+                    message.Code = 16;
+                    break;
+                case "ErrFailedDeleteLink":
+                case 17:
+                    message.Code = 17;
+                    break;
+                case "ErrCouldnotConvertAuth":
+                case 18:
+                    message.Code = 18;
+                    break;
+                case "ErrEmailDomainNotWhitelisted":
+                case 19:
+                    message.Code = 19;
+                    break;
+                case "ErrTOSNotAccepted":
+                case 20:
+                    message.Code = 20;
+                    break;
+                case "ErrInvalidDOB":
+                case 21:
+                    message.Code = 21;
+                    break;
+                case "ErrInvalidEmailConfirm":
+                case 22:
+                    message.Code = 22;
+                    break;
+                case "ErrInvalidPassword":
+                case 23:
+                    message.Code = 23;
+                    break;
+                case "ErrInvalidPasswordConfirm":
+                case 24:
+                    message.Code = 24;
+                    break;
+                case "ErrAccountAlreadyExists":
+                case 25:
+                    message.Code = 25;
+                    break;
+                case "ErrIncorrectPassword":
+                case 26:
+                    message.Code = 26;
+                    break;
+                case "ErrAccountIsArealdyOnHolded":
+                case 27:
+                    message.Code = 27;
+                    break;
+                case "ErrFailedUpdateOnHold":
+                case 28:
+                    message.Code = 28;
+                    break;
+                case "ErrFailedUpdateLocked":
+                case 29:
+                    message.Code = 29;
+                    break;
+                case "ErrAccountLocked":
+                case 30:
+                    message.Code = 30;
+                    break;
+                case "ErrAccountUnconfirmed":
+                case 31:
+                    message.Code = 31;
+                    break;
+                case "ErrAccountAlreadyLinked":
+                case 32:
+                    message.Code = 32;
+                    break;
+                case "ErrLitePCLauncherRegistrationDisabled":
+                case 33:
+                    message.Code = 33;
+                    break;
+                case "ErrInvalidLinkInfo":
+                case 34:
+                    message.Code = 34;
+                    break;
+                case "ErrEmailChangeNewEmailSameAsOld":
+                case 35:
+                    message.Code = 35;
+                    break;
+                case "ErrEmailChangeNewEmailAlreadyRegistered":
+                case 36:
+                    message.Code = 36;
+                    break;
+                case "ErrEmailChangeOldEmailAlreadyChanged":
+                case 37:
+                    message.Code = 37;
+                    break;
+                case "ErrEmailChangeInvalidToken":
+                case 38:
+                    message.Code = 38;
+                    break;
+                case "ErrPasswordResetInvalidToken":
+                case 39:
+                    message.Code = 39;
+                    break;
+                case "ErrLinkInfoMissing":
+                case 40:
+                    message.Code = 40;
+                    break;
+                case "ErrProviderAccountNotFound":
+                case 41:
+                    message.Code = 41;
+                    break;
+                case "ErrTSLProxyRequestFail":
+                case 42:
+                    message.Code = 42;
+                    break;
+                case "ErrTSLPlatformAccountUnmarshalFail":
+                case 43:
+                    message.Code = 43;
+                    break;
+                case "ErrTSLPlatformAccountEmptyResponse":
+                case 44:
+                    message.Code = 44;
+                    break;
+                case "ErrTSLPlatformAccountSummaryNotFound":
+                case 45:
+                    message.Code = 45;
+                    break;
+                case "ErrTSLPlatformAccountSummaryMissingData":
+                case 46:
+                    message.Code = 46;
+                    break;
+                case "ErrAccountRecentlyUnlinked":
+                case 47:
+                    message.Code = 47;
+                    break;
+                case "ErrTooManyRequestByIp":
+                case 48:
+                    message.Code = 48;
+                    break;
+                case "ErrTooManyRequestByLogin":
+                case 49:
+                    message.Code = 49;
+                    break;
+                case "ErrTooManyRequestByForgotPassword":
+                case 50:
+                    message.Code = 50;
+                    break;
+                case "ErrNoPlatformsLinked":
+                case 51:
+                    message.Code = 51;
+                    break;
+                case "ErrInvalidUsername":
+                case 52:
+                    message.Code = 52;
+                    break;
+                case "ErrUsernameTaken":
+                case 53:
+                    message.Code = 53;
+                    break;
+                case "ErrAccountByUsernameNotFound":
+                case 54:
+                    message.Code = 54;
+                    break;
+                case "ErrUsernameAlreadySet":
+                case 55:
+                    message.Code = 55;
+                    break;
+                case "ErrInvalidCountry":
+                case 56:
+                    message.Code = 56;
+                    break;
+                case "ErrMagicLinkCodeInvalid":
+                case 57:
+                    message.Code = 57;
+                    break;
+                case "ErrMagicLinkNotComplete":
+                case 58:
+                    message.Code = 58;
+                    break;
+                case "ErrInvalidCreatorCode":
+                case 59:
+                    message.Code = 59;
+                    break;
+                case "ErrProviderLocked":
+                case 60:
+                    message.Code = 60;
+                    break;
+                case "ErrTooManyRequestByChangeEmail":
+                case 61:
+                    message.Code = 61;
+                    break;
+                case "ErrCouldNotGetIpLogs":
+                case 62:
+                    message.Code = 62;
+                    break;
+                case "ErrCouldNotGetSessionLogs":
+                case 63:
+                    message.Code = 63;
+                    break;
+                case "ErrCreatorCodeRequired":
+                case 64:
+                    message.Code = 64;
+                    break;
+                case "ErrPromotionNotFound":
+                case 65:
+                    message.Code = 65;
+                    break;
+                case "ErrPromotionNotActive":
+                case 66:
+                    message.Code = 66;
+                    break;
+                case "ErrPromotionNoCodesAvailable":
+                case 67:
+                    message.Code = 67;
+                    break;
+                case "ErrUnknownEventTypeFromMailjet":
+                case 68:
+                    message.Code = 68;
+                    break;
+                case "Success":
+                case 200:
+                    message.Code = 200;
+                    break;
+                }
+                if (object.Message != null)
+                    message.Message = String(object.Message);
+                if (object.Account != null) {
+                    if (typeof object.Account !== "object")
+                        throw TypeError(".pubg.globalaccounts.GPPAccountResponse.Account: object expected");
+                    message.Account = $root.pubg.globalaccounts.GlobalAccount.fromObject(object.Account);
+                }
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a GPPAccountResponse message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof pubg.globalaccounts.GPPAccountResponse
+             * @static
+             * @param {pubg.globalaccounts.GPPAccountResponse} message GPPAccountResponse
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            GPPAccountResponse.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.Code = options.enums === String ? "ErrAccountByIDNotFound" : 0;
+                    object.Message = "";
+                    object.Account = null;
+                }
+                if (message.Code != null && message.hasOwnProperty("Code"))
+                    object.Code = options.enums === String ? $root.pubg.globalaccounts.BackendErrCode[message.Code] : message.Code;
+                if (message.Message != null && message.hasOwnProperty("Message"))
+                    object.Message = message.Message;
+                if (message.Account != null && message.hasOwnProperty("Account"))
+                    object.Account = $root.pubg.globalaccounts.GlobalAccount.toObject(message.Account, options);
+                return object;
+            };
+
+            /**
+             * Converts this GPPAccountResponse to JSON.
+             * @function toJSON
+             * @memberof pubg.globalaccounts.GPPAccountResponse
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            GPPAccountResponse.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            return GPPAccountResponse;
         })();
 
         globalaccounts.AuthLinkInfo = (function() {
@@ -13425,6 +14280,7 @@ $root.pubg = (function() {
                     case 65:
                     case 66:
                     case 67:
+                    case 68:
                     case 200:
                         break;
                     }
@@ -13721,6 +14577,10 @@ $root.pubg = (function() {
                 case "ErrPromotionNoCodesAvailable":
                 case 67:
                     message.Code = 67;
+                    break;
+                case "ErrUnknownEventTypeFromMailjet":
+                case 68:
+                    message.Code = 68;
                     break;
                 case "Success":
                 case 200:
@@ -14026,6 +14886,7 @@ $root.pubg = (function() {
                     case 65:
                     case 66:
                     case 67:
+                    case 68:
                     case 200:
                         break;
                     }
@@ -14331,6 +15192,10 @@ $root.pubg = (function() {
                 case 67:
                     message.Code = 67;
                     break;
+                case "ErrUnknownEventTypeFromMailjet":
+                case 68:
+                    message.Code = 68;
+                    break;
                 case "Success":
                 case 200:
                     message.Code = 200;
@@ -14629,6 +15494,7 @@ $root.pubg = (function() {
                     case 65:
                     case 66:
                     case 67:
+                    case 68:
                     case 200:
                         break;
                     }
@@ -14928,6 +15794,10 @@ $root.pubg = (function() {
                 case 67:
                     message.Code = 67;
                     break;
+                case "ErrUnknownEventTypeFromMailjet":
+                case 68:
+                    message.Code = 68;
+                    break;
                 case "Success":
                 case 200:
                     message.Code = 200;
@@ -15214,6 +16084,7 @@ $root.pubg = (function() {
                     case 65:
                     case 66:
                     case 67:
+                    case 68:
                     case 200:
                         break;
                     }
@@ -15513,6 +16384,10 @@ $root.pubg = (function() {
                 case 67:
                     message.Code = 67;
                     break;
+                case "ErrUnknownEventTypeFromMailjet":
+                case 68:
+                    message.Code = 68;
+                    break;
                 case "Success":
                 case 200:
                     message.Code = 200;
@@ -15799,6 +16674,7 @@ $root.pubg = (function() {
                     case 65:
                     case 66:
                     case 67:
+                    case 68:
                     case 200:
                         break;
                     }
@@ -16098,6 +16974,10 @@ $root.pubg = (function() {
                 case 67:
                     message.Code = 67;
                     break;
+                case "ErrUnknownEventTypeFromMailjet":
+                case 68:
+                    message.Code = 68;
+                    break;
                 case "Success":
                 case 200:
                     message.Code = 200;
@@ -16384,6 +17264,7 @@ $root.pubg = (function() {
                     case 65:
                     case 66:
                     case 67:
+                    case 68:
                     case 200:
                         break;
                     }
@@ -16681,6 +17562,10 @@ $root.pubg = (function() {
                 case 67:
                     message.Code = 67;
                     break;
+                case "ErrUnknownEventTypeFromMailjet":
+                case 68:
+                    message.Code = 68;
+                    break;
                 case "Success":
                 case 200:
                     message.Code = 200;
@@ -16973,6 +17858,7 @@ $root.pubg = (function() {
                     case 65:
                     case 66:
                     case 67:
+                    case 68:
                     case 200:
                         break;
                     }
@@ -17270,6 +18156,10 @@ $root.pubg = (function() {
                 case 67:
                     message.Code = 67;
                     break;
+                case "ErrUnknownEventTypeFromMailjet":
+                case 68:
+                    message.Code = 68;
+                    break;
                 case "Success":
                 case 200:
                     message.Code = 200;
@@ -17556,6 +18446,7 @@ $root.pubg = (function() {
                     case 65:
                     case 66:
                     case 67:
+                    case 68:
                     case 200:
                         break;
                     }
@@ -17851,6 +18742,10 @@ $root.pubg = (function() {
                 case "ErrPromotionNoCodesAvailable":
                 case 67:
                     message.Code = 67;
+                    break;
+                case "ErrUnknownEventTypeFromMailjet":
+                case 68:
+                    message.Code = 68;
                     break;
                 case "Success":
                 case 200:
@@ -18167,6 +19062,7 @@ $root.pubg = (function() {
                     case 65:
                     case 66:
                     case 67:
+                    case 68:
                     case 200:
                         break;
                     }
@@ -18468,6 +19364,10 @@ $root.pubg = (function() {
                 case 67:
                     message.Code = 67;
                     break;
+                case "ErrUnknownEventTypeFromMailjet":
+                case 68:
+                    message.Code = 68;
+                    break;
                 case "Success":
                 case 200:
                     message.Code = 200;
@@ -18760,6 +19660,7 @@ $root.pubg = (function() {
                     case 65:
                     case 66:
                     case 67:
+                    case 68:
                     case 200:
                         break;
                     }
@@ -19055,6 +19956,10 @@ $root.pubg = (function() {
                 case "ErrPromotionNoCodesAvailable":
                 case 67:
                     message.Code = 67;
+                    break;
+                case "ErrUnknownEventTypeFromMailjet":
+                case 68:
+                    message.Code = 68;
                     break;
                 case "Success":
                 case 200:
@@ -19359,6 +20264,7 @@ $root.pubg = (function() {
                     case 65:
                     case 66:
                     case 67:
+                    case 68:
                     case 200:
                         break;
                     }
@@ -19666,6 +20572,10 @@ $root.pubg = (function() {
                 case "ErrPromotionNoCodesAvailable":
                 case 67:
                     message.Code = 67;
+                    break;
+                case "ErrUnknownEventTypeFromMailjet":
+                case 68:
+                    message.Code = 68;
                     break;
                 case "Success":
                 case 200:
@@ -19977,6 +20887,7 @@ $root.pubg = (function() {
                     case 65:
                     case 66:
                     case 67:
+                    case 68:
                     case 200:
                         break;
                     }
@@ -20280,6 +21191,10 @@ $root.pubg = (function() {
                 case 67:
                     message.Code = 67;
                     break;
+                case "ErrUnknownEventTypeFromMailjet":
+                case 68:
+                    message.Code = 68;
+                    break;
                 case "Success":
                 case 200:
                     message.Code = 200;
@@ -20359,6 +21274,7 @@ $root.pubg = (function() {
              * @property {pubg.globalaccounts.IAuthenticationData|null} [Authentications] GlobalAccount Authentications
              * @property {Object.<string,pubg.globalaccounts.IPlatformAccount>|null} [Platforms] GlobalAccount Platforms
              * @property {pubg.globalaccounts.IProfile|null} [Profile] GlobalAccount Profile
+             * @property {Array.<pubg.globalaccounts.IGameAccount>|null} [GameAccounts] GlobalAccount GameAccounts
              */
 
             /**
@@ -20371,6 +21287,7 @@ $root.pubg = (function() {
              */
             function GlobalAccount(properties) {
                 this.Platforms = {};
+                this.GameAccounts = [];
                 if (properties)
                     for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null)
@@ -20442,6 +21359,14 @@ $root.pubg = (function() {
             GlobalAccount.prototype.Profile = null;
 
             /**
+             * GlobalAccount GameAccounts.
+             * @member {Array.<pubg.globalaccounts.IGameAccount>} GameAccounts
+             * @memberof pubg.globalaccounts.GlobalAccount
+             * @instance
+             */
+            GlobalAccount.prototype.GameAccounts = $util.emptyArray;
+
+            /**
              * Creates a new GlobalAccount instance using the specified properties.
              * @function create
              * @memberof pubg.globalaccounts.GlobalAccount
@@ -20484,6 +21409,9 @@ $root.pubg = (function() {
                     }
                 if (message.Profile != null && message.hasOwnProperty("Profile"))
                     $root.pubg.globalaccounts.Profile.encode(message.Profile, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
+                if (message.GameAccounts != null && message.GameAccounts.length)
+                    for (var i = 0; i < message.GameAccounts.length; ++i)
+                        $root.pubg.globalaccounts.GameAccount.encode(message.GameAccounts[i], writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
                 return writer;
             };
 
@@ -20546,6 +21474,11 @@ $root.pubg = (function() {
                         break;
                     case 8:
                         message.Profile = $root.pubg.globalaccounts.Profile.decode(reader, reader.uint32());
+                        break;
+                    case 9:
+                        if (!(message.GameAccounts && message.GameAccounts.length))
+                            message.GameAccounts = [];
+                        message.GameAccounts.push($root.pubg.globalaccounts.GameAccount.decode(reader, reader.uint32()));
                         break;
                     default:
                         reader.skipType(tag & 7);
@@ -20617,6 +21550,15 @@ $root.pubg = (function() {
                     if (error)
                         return "Profile." + error;
                 }
+                if (message.GameAccounts != null && message.hasOwnProperty("GameAccounts")) {
+                    if (!Array.isArray(message.GameAccounts))
+                        return "GameAccounts: array expected";
+                    for (var i = 0; i < message.GameAccounts.length; ++i) {
+                        var error = $root.pubg.globalaccounts.GameAccount.verify(message.GameAccounts[i]);
+                        if (error)
+                            return "GameAccounts." + error;
+                    }
+                }
                 return null;
             };
 
@@ -20662,6 +21604,16 @@ $root.pubg = (function() {
                         throw TypeError(".pubg.globalaccounts.GlobalAccount.Profile: object expected");
                     message.Profile = $root.pubg.globalaccounts.Profile.fromObject(object.Profile);
                 }
+                if (object.GameAccounts) {
+                    if (!Array.isArray(object.GameAccounts))
+                        throw TypeError(".pubg.globalaccounts.GlobalAccount.GameAccounts: array expected");
+                    message.GameAccounts = [];
+                    for (var i = 0; i < object.GameAccounts.length; ++i) {
+                        if (typeof object.GameAccounts[i] !== "object")
+                            throw TypeError(".pubg.globalaccounts.GlobalAccount.GameAccounts: object expected");
+                        message.GameAccounts[i] = $root.pubg.globalaccounts.GameAccount.fromObject(object.GameAccounts[i]);
+                    }
+                }
                 return message;
             };
 
@@ -20678,6 +21630,8 @@ $root.pubg = (function() {
                 if (!options)
                     options = {};
                 var object = {};
+                if (options.arrays || options.defaults)
+                    object.GameAccounts = [];
                 if (options.objects || options.defaults)
                     object.Platforms = {};
                 if (options.defaults) {
@@ -20709,6 +21663,11 @@ $root.pubg = (function() {
                 }
                 if (message.Profile != null && message.hasOwnProperty("Profile"))
                     object.Profile = $root.pubg.globalaccounts.Profile.toObject(message.Profile, options);
+                if (message.GameAccounts && message.GameAccounts.length) {
+                    object.GameAccounts = [];
+                    for (var j = 0; j < message.GameAccounts.length; ++j)
+                        object.GameAccounts[j] = $root.pubg.globalaccounts.GameAccount.toObject(message.GameAccounts[j], options);
+                }
                 return object;
             };
 
@@ -28848,6 +29807,7 @@ $root.pubg = (function() {
                     case 65:
                     case 66:
                     case 67:
+                    case 68:
                     case 200:
                         break;
                     }
@@ -29159,6 +30119,10 @@ $root.pubg = (function() {
                 case "ErrPromotionNoCodesAvailable":
                 case 67:
                     message.Code = 67;
+                    break;
+                case "ErrUnknownEventTypeFromMailjet":
+                case 68:
+                    message.Code = 68;
                     break;
                 case "Success":
                 case 200:
@@ -29800,6 +30764,7 @@ $root.pubg = (function() {
          * @property {number} ErrPromotionNotFound=65 ErrPromotionNotFound value
          * @property {number} ErrPromotionNotActive=66 ErrPromotionNotActive value
          * @property {number} ErrPromotionNoCodesAvailable=67 ErrPromotionNoCodesAvailable value
+         * @property {number} ErrUnknownEventTypeFromMailjet=68 ErrUnknownEventTypeFromMailjet value
          * @property {number} Success=200 Success value
          */
         globalaccounts.BackendErrCode = (function() {
@@ -29872,6 +30837,7 @@ $root.pubg = (function() {
             values[valuesById[65] = "ErrPromotionNotFound"] = 65;
             values[valuesById[66] = "ErrPromotionNotActive"] = 66;
             values[valuesById[67] = "ErrPromotionNoCodesAvailable"] = 67;
+            values[valuesById[68] = "ErrUnknownEventTypeFromMailjet"] = 68;
             values[valuesById[200] = "Success"] = 200;
             return values;
         })();
@@ -30200,6 +31166,376 @@ $root.pubg = (function() {
             };
 
             return PlatformAccount;
+        })();
+
+        globalaccounts.GameAccount = (function() {
+
+            /**
+             * Properties of a GameAccount.
+             * @memberof pubg.globalaccounts
+             * @interface IGameAccount
+             * @property {string|null} [GUID] GameAccount GUID
+             * @property {string|null} [ProviderID] GameAccount ProviderID
+             * @property {string|null} [PlatformID] GameAccount PlatformID
+             * @property {string|null} [AuthProvider] GameAccount AuthProvider
+             * @property {string|null} [AuthProviderID] GameAccount AuthProviderID
+             * @property {string|null} [DisplayName] GameAccount DisplayName
+             * @property {number|Long|null} [CreatedAt] GameAccount CreatedAt
+             * @property {number|Long|null} [UpdatedAt] GameAccount UpdatedAt
+             */
+
+            /**
+             * Constructs a new GameAccount.
+             * @memberof pubg.globalaccounts
+             * @classdesc Represents a GameAccount.
+             * @implements IGameAccount
+             * @constructor
+             * @param {pubg.globalaccounts.IGameAccount=} [properties] Properties to set
+             */
+            function GameAccount(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+
+            /**
+             * GameAccount GUID.
+             * @member {string} GUID
+             * @memberof pubg.globalaccounts.GameAccount
+             * @instance
+             */
+            GameAccount.prototype.GUID = "";
+
+            /**
+             * GameAccount ProviderID.
+             * @member {string} ProviderID
+             * @memberof pubg.globalaccounts.GameAccount
+             * @instance
+             */
+            GameAccount.prototype.ProviderID = "";
+
+            /**
+             * GameAccount PlatformID.
+             * @member {string} PlatformID
+             * @memberof pubg.globalaccounts.GameAccount
+             * @instance
+             */
+            GameAccount.prototype.PlatformID = "";
+
+            /**
+             * GameAccount AuthProvider.
+             * @member {string} AuthProvider
+             * @memberof pubg.globalaccounts.GameAccount
+             * @instance
+             */
+            GameAccount.prototype.AuthProvider = "";
+
+            /**
+             * GameAccount AuthProviderID.
+             * @member {string} AuthProviderID
+             * @memberof pubg.globalaccounts.GameAccount
+             * @instance
+             */
+            GameAccount.prototype.AuthProviderID = "";
+
+            /**
+             * GameAccount DisplayName.
+             * @member {string} DisplayName
+             * @memberof pubg.globalaccounts.GameAccount
+             * @instance
+             */
+            GameAccount.prototype.DisplayName = "";
+
+            /**
+             * GameAccount CreatedAt.
+             * @member {number|Long} CreatedAt
+             * @memberof pubg.globalaccounts.GameAccount
+             * @instance
+             */
+            GameAccount.prototype.CreatedAt = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * GameAccount UpdatedAt.
+             * @member {number|Long} UpdatedAt
+             * @memberof pubg.globalaccounts.GameAccount
+             * @instance
+             */
+            GameAccount.prototype.UpdatedAt = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+            /**
+             * Creates a new GameAccount instance using the specified properties.
+             * @function create
+             * @memberof pubg.globalaccounts.GameAccount
+             * @static
+             * @param {pubg.globalaccounts.IGameAccount=} [properties] Properties to set
+             * @returns {pubg.globalaccounts.GameAccount} GameAccount instance
+             */
+            GameAccount.create = function create(properties) {
+                return new GameAccount(properties);
+            };
+
+            /**
+             * Encodes the specified GameAccount message. Does not implicitly {@link pubg.globalaccounts.GameAccount.verify|verify} messages.
+             * @function encode
+             * @memberof pubg.globalaccounts.GameAccount
+             * @static
+             * @param {pubg.globalaccounts.IGameAccount} message GameAccount message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GameAccount.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.GUID != null && message.hasOwnProperty("GUID"))
+                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.GUID);
+                if (message.ProviderID != null && message.hasOwnProperty("ProviderID"))
+                    writer.uint32(/* id 2, wireType 2 =*/18).string(message.ProviderID);
+                if (message.PlatformID != null && message.hasOwnProperty("PlatformID"))
+                    writer.uint32(/* id 3, wireType 2 =*/26).string(message.PlatformID);
+                if (message.AuthProvider != null && message.hasOwnProperty("AuthProvider"))
+                    writer.uint32(/* id 4, wireType 2 =*/34).string(message.AuthProvider);
+                if (message.AuthProviderID != null && message.hasOwnProperty("AuthProviderID"))
+                    writer.uint32(/* id 5, wireType 2 =*/42).string(message.AuthProviderID);
+                if (message.DisplayName != null && message.hasOwnProperty("DisplayName"))
+                    writer.uint32(/* id 6, wireType 2 =*/50).string(message.DisplayName);
+                if (message.CreatedAt != null && message.hasOwnProperty("CreatedAt"))
+                    writer.uint32(/* id 7, wireType 0 =*/56).int64(message.CreatedAt);
+                if (message.UpdatedAt != null && message.hasOwnProperty("UpdatedAt"))
+                    writer.uint32(/* id 8, wireType 0 =*/64).int64(message.UpdatedAt);
+                return writer;
+            };
+
+            /**
+             * Encodes the specified GameAccount message, length delimited. Does not implicitly {@link pubg.globalaccounts.GameAccount.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof pubg.globalaccounts.GameAccount
+             * @static
+             * @param {pubg.globalaccounts.IGameAccount} message GameAccount message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            GameAccount.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+
+            /**
+             * Decodes a GameAccount message from the specified reader or buffer.
+             * @function decode
+             * @memberof pubg.globalaccounts.GameAccount
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {pubg.globalaccounts.GameAccount} GameAccount
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GameAccount.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.pubg.globalaccounts.GameAccount();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        message.GUID = reader.string();
+                        break;
+                    case 2:
+                        message.ProviderID = reader.string();
+                        break;
+                    case 3:
+                        message.PlatformID = reader.string();
+                        break;
+                    case 4:
+                        message.AuthProvider = reader.string();
+                        break;
+                    case 5:
+                        message.AuthProviderID = reader.string();
+                        break;
+                    case 6:
+                        message.DisplayName = reader.string();
+                        break;
+                    case 7:
+                        message.CreatedAt = reader.int64();
+                        break;
+                    case 8:
+                        message.UpdatedAt = reader.int64();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+
+            /**
+             * Decodes a GameAccount message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof pubg.globalaccounts.GameAccount
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {pubg.globalaccounts.GameAccount} GameAccount
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            GameAccount.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+
+            /**
+             * Verifies a GameAccount message.
+             * @function verify
+             * @memberof pubg.globalaccounts.GameAccount
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            GameAccount.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.GUID != null && message.hasOwnProperty("GUID"))
+                    if (!$util.isString(message.GUID))
+                        return "GUID: string expected";
+                if (message.ProviderID != null && message.hasOwnProperty("ProviderID"))
+                    if (!$util.isString(message.ProviderID))
+                        return "ProviderID: string expected";
+                if (message.PlatformID != null && message.hasOwnProperty("PlatformID"))
+                    if (!$util.isString(message.PlatformID))
+                        return "PlatformID: string expected";
+                if (message.AuthProvider != null && message.hasOwnProperty("AuthProvider"))
+                    if (!$util.isString(message.AuthProvider))
+                        return "AuthProvider: string expected";
+                if (message.AuthProviderID != null && message.hasOwnProperty("AuthProviderID"))
+                    if (!$util.isString(message.AuthProviderID))
+                        return "AuthProviderID: string expected";
+                if (message.DisplayName != null && message.hasOwnProperty("DisplayName"))
+                    if (!$util.isString(message.DisplayName))
+                        return "DisplayName: string expected";
+                if (message.CreatedAt != null && message.hasOwnProperty("CreatedAt"))
+                    if (!$util.isInteger(message.CreatedAt) && !(message.CreatedAt && $util.isInteger(message.CreatedAt.low) && $util.isInteger(message.CreatedAt.high)))
+                        return "CreatedAt: integer|Long expected";
+                if (message.UpdatedAt != null && message.hasOwnProperty("UpdatedAt"))
+                    if (!$util.isInteger(message.UpdatedAt) && !(message.UpdatedAt && $util.isInteger(message.UpdatedAt.low) && $util.isInteger(message.UpdatedAt.high)))
+                        return "UpdatedAt: integer|Long expected";
+                return null;
+            };
+
+            /**
+             * Creates a GameAccount message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof pubg.globalaccounts.GameAccount
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {pubg.globalaccounts.GameAccount} GameAccount
+             */
+            GameAccount.fromObject = function fromObject(object) {
+                if (object instanceof $root.pubg.globalaccounts.GameAccount)
+                    return object;
+                var message = new $root.pubg.globalaccounts.GameAccount();
+                if (object.GUID != null)
+                    message.GUID = String(object.GUID);
+                if (object.ProviderID != null)
+                    message.ProviderID = String(object.ProviderID);
+                if (object.PlatformID != null)
+                    message.PlatformID = String(object.PlatformID);
+                if (object.AuthProvider != null)
+                    message.AuthProvider = String(object.AuthProvider);
+                if (object.AuthProviderID != null)
+                    message.AuthProviderID = String(object.AuthProviderID);
+                if (object.DisplayName != null)
+                    message.DisplayName = String(object.DisplayName);
+                if (object.CreatedAt != null)
+                    if ($util.Long)
+                        (message.CreatedAt = $util.Long.fromValue(object.CreatedAt)).unsigned = false;
+                    else if (typeof object.CreatedAt === "string")
+                        message.CreatedAt = parseInt(object.CreatedAt, 10);
+                    else if (typeof object.CreatedAt === "number")
+                        message.CreatedAt = object.CreatedAt;
+                    else if (typeof object.CreatedAt === "object")
+                        message.CreatedAt = new $util.LongBits(object.CreatedAt.low >>> 0, object.CreatedAt.high >>> 0).toNumber();
+                if (object.UpdatedAt != null)
+                    if ($util.Long)
+                        (message.UpdatedAt = $util.Long.fromValue(object.UpdatedAt)).unsigned = false;
+                    else if (typeof object.UpdatedAt === "string")
+                        message.UpdatedAt = parseInt(object.UpdatedAt, 10);
+                    else if (typeof object.UpdatedAt === "number")
+                        message.UpdatedAt = object.UpdatedAt;
+                    else if (typeof object.UpdatedAt === "object")
+                        message.UpdatedAt = new $util.LongBits(object.UpdatedAt.low >>> 0, object.UpdatedAt.high >>> 0).toNumber();
+                return message;
+            };
+
+            /**
+             * Creates a plain object from a GameAccount message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof pubg.globalaccounts.GameAccount
+             * @static
+             * @param {pubg.globalaccounts.GameAccount} message GameAccount
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            GameAccount.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.GUID = "";
+                    object.ProviderID = "";
+                    object.PlatformID = "";
+                    object.AuthProvider = "";
+                    object.AuthProviderID = "";
+                    object.DisplayName = "";
+                    if ($util.Long) {
+                        var long = new $util.Long(0, 0, false);
+                        object.CreatedAt = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                    } else
+                        object.CreatedAt = options.longs === String ? "0" : 0;
+                    if ($util.Long) {
+                        var long = new $util.Long(0, 0, false);
+                        object.UpdatedAt = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                    } else
+                        object.UpdatedAt = options.longs === String ? "0" : 0;
+                }
+                if (message.GUID != null && message.hasOwnProperty("GUID"))
+                    object.GUID = message.GUID;
+                if (message.ProviderID != null && message.hasOwnProperty("ProviderID"))
+                    object.ProviderID = message.ProviderID;
+                if (message.PlatformID != null && message.hasOwnProperty("PlatformID"))
+                    object.PlatformID = message.PlatformID;
+                if (message.AuthProvider != null && message.hasOwnProperty("AuthProvider"))
+                    object.AuthProvider = message.AuthProvider;
+                if (message.AuthProviderID != null && message.hasOwnProperty("AuthProviderID"))
+                    object.AuthProviderID = message.AuthProviderID;
+                if (message.DisplayName != null && message.hasOwnProperty("DisplayName"))
+                    object.DisplayName = message.DisplayName;
+                if (message.CreatedAt != null && message.hasOwnProperty("CreatedAt"))
+                    if (typeof message.CreatedAt === "number")
+                        object.CreatedAt = options.longs === String ? String(message.CreatedAt) : message.CreatedAt;
+                    else
+                        object.CreatedAt = options.longs === String ? $util.Long.prototype.toString.call(message.CreatedAt) : options.longs === Number ? new $util.LongBits(message.CreatedAt.low >>> 0, message.CreatedAt.high >>> 0).toNumber() : message.CreatedAt;
+                if (message.UpdatedAt != null && message.hasOwnProperty("UpdatedAt"))
+                    if (typeof message.UpdatedAt === "number")
+                        object.UpdatedAt = options.longs === String ? String(message.UpdatedAt) : message.UpdatedAt;
+                    else
+                        object.UpdatedAt = options.longs === String ? $util.Long.prototype.toString.call(message.UpdatedAt) : options.longs === Number ? new $util.LongBits(message.UpdatedAt.low >>> 0, message.UpdatedAt.high >>> 0).toNumber() : message.UpdatedAt;
+                return object;
+            };
+
+            /**
+             * Converts this GameAccount to JSON.
+             * @function toJSON
+             * @memberof pubg.globalaccounts.GameAccount
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            GameAccount.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+
+            return GameAccount;
         })();
 
         return globalaccounts;

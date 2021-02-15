@@ -214,6 +214,8 @@
 								
 									<li><a href="#pubg.globalaccounts.Identity.CreateGlobalAccount"><span class="wide-badge">SM</span>CreateGlobalAccount</a></li>
 								
+									<li><a href="#pubg.globalaccounts.Identity.FindOrInitGPPAccount"><span class="wide-badge">SM</span>FindOrInitGPPAccount</a></li>
+								
 									<li><a href="#pubg.globalaccounts.Identity.DeleteGlobalAccount"><span class="wide-badge">SM</span>DeleteGlobalAccount</a></li>
 								
 									<li><a href="#pubg.globalaccounts.Identity.GetGlobalAccount"><span class="wide-badge">SM</span>GetGlobalAccount</a></li>
@@ -399,6 +401,18 @@
 					
 					<li>
 						<a href="#pubg.globalaccounts.FacebookLinkInfo"><span class="badge">M</span>FacebookLinkInfo</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.FindOrInitGPPAccountParams"><span class="badge">M</span>FindOrInitGPPAccountParams</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.GPPAccountResponse"><span class="badge">M</span>GPPAccountResponse</a>
+					</li>
+					
+					<li>
+						<a href="#pubg.globalaccounts.GameAccount"><span class="badge">M</span>GameAccount</a>
 					</li>
 					
 					<li>
@@ -686,6 +700,21 @@
 				</tbody>
 			</table>
 			<p><b>Description:</b> <p>Creates a new Local Authentication record. Usually this triggers an Activation email to be sent to the user.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- ErrTOSNotAccepted</p><p>- ErrInvalidDOB</p><p>- ErrInvalidUsername</p><p>- ErrInvalidCountry</p><p>- ErrUsernameTaken</p><p>- ErrEmailDomainNotWhitelisted</p><p>- ErrAccountAlreadyExists</p><p>- ErrAccountByGUIDNotFound</p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
+		
+			<h2 id="pubg.globalaccounts.Identity.FindOrInitGPPAccount">FindOrInitGPPAccount</h2>
+			<table class="req-resp-desc">
+				<tbody>
+					<tr>
+						<td><b>Request Message</b></td>
+						<td><a href="#pubg.globalaccounts.FindOrInitGPPAccountParams">FindOrInitGPPAccountParams</a></td>
+					</tr>
+					<tr>
+						<td><b>Response Message</b></td>
+						<td><a href="#pubg.globalaccounts.GPPAccountResponse">GPPAccountResponse</a></td>
+					</tr>
+				</tbody>
+			</table>
+			<p><b>Description:</b> <p>Attempts to find a Global Account record using the provided identifiers. If none is found then we create a new Platform</p><p>record with its own GUID and return that information.</p><p><b>Possible Error Codes:</b></p><p><pre></p><p>- Success</p><p></pre></p><p>(See the <a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a> enum for more information)</p></ >
 		
 			<h2 id="pubg.globalaccounts.Identity.DeleteGlobalAccount">DeleteGlobalAccount</h2>
 			<table class="req-resp-desc">
@@ -2280,7 +2309,7 @@
 						<td>CriteriaType</td>
 						<td><a href="#string">string</a></td>
 						<td></td>
-						<td><p>Describes what part of the account Criteria is searching for.</p><p>Possible values:</p><p>- guid</p><p>- provider_id</p></td>
+						<td><p>Describes what part of the account Criteria is searching for.</p><p>Possible values:</p><p>- guid</p><p>- provider_id</p><p>- platform_id</p></td>
 					</tr>
 				
 				</tbody>
@@ -2672,6 +2701,155 @@
 
 		
 	
+		<h3 id="pubg.globalaccounts.FindOrInitGPPAccountParams">FindOrInitGPPAccountParams</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>AuthProvider</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The name of the service that the AuthProviderID is valid for, ("steam", "xbox", "psn", etc.)</p></td>
+					</tr>
+				
+					<tr>
+						<td>AuthProviderID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The user's ID in the auth provider's system (SteamID64, XUID, PSNID, etc.)</p></td>
+					</tr>
+				
+					<tr>
+						<td>GameAccountID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>Optional: The ID of the user's account in the GPP system. If blank the generated Global Account ID will be used.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.GPPAccountResponse">GPPAccountResponse</h3>
+		<p></p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>Code</td>
+						<td><a href="#pubg.globalaccounts.BackendErrCode">BackendErrCode</a></td>
+						<td></td>
+						<td><p>Indicates the outcome of the request.</p><p>Individual methods should document what values may be returned here.</p><p>See the "BackendErrCode" enum for all possible values.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Message</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>May contain a message about the response.</p></td>
+					</tr>
+				
+					<tr>
+						<td>Account</td>
+						<td><a href="#pubg.globalaccounts.GlobalAccount">GlobalAccount</a></td>
+						<td></td>
+						<td><p>Details about the account that was found or created.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
+		<h3 id="pubg.globalaccounts.GameAccount">GameAccount</h3>
+		<p>A GameAccount links a Game-specific account to a GlobalAccount through an Authentication Provider.</p>
+
+		
+			<table class="field-table">
+				<thead>
+				<tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+				</thead>
+				<tbody>
+				
+					<tr>
+						<td>GUID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Global Account ID this link belongs to.</p></td>
+					</tr>
+				
+					<tr>
+						<td>ProviderID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The unique ID of this GameAccount record</p></td>
+					</tr>
+				
+					<tr>
+						<td>PlatformID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Game Account ID.</p></td>
+					</tr>
+				
+					<tr>
+						<td>AuthProvider</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The Auth Provider that the AuthProvier ID is scoped to (xbox, steam, psn, etc.)</p></td>
+					</tr>
+				
+					<tr>
+						<td>AuthProviderID</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The user's ID in the associated auth provider (XBox ID, PSN ID, etc.)</p></td>
+					</tr>
+				
+					<tr>
+						<td>DisplayName</td>
+						<td><a href="#string">string</a></td>
+						<td></td>
+						<td><p>The player's IGN</p></td>
+					</tr>
+				
+					<tr>
+						<td>CreatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>The time when this record was created, Epoch time.</p></td>
+					</tr>
+				
+					<tr>
+						<td>UpdatedAt</td>
+						<td><a href="#int64">int64</a></td>
+						<td></td>
+						<td><p>The time when this record was last updated, Epoch time.</p></td>
+					</tr>
+				
+				</tbody>
+			</table>
+
+			
+
+		
+	
 		<h3 id="pubg.globalaccounts.GetCreatorCodesParams">GetCreatorCodesParams</h3>
 		<p></p>
 
@@ -2811,7 +2989,7 @@
 						<td>Platforms</td>
 						<td><a href="#pubg.globalaccounts.GlobalAccount.PlatformsEntry">GlobalAccount.PlatformsEntry</a></td>
 						<td>repeated</td>
-						<td><p>PUBG Platform accounts linked to this GlobalAccount.</p></td>
+						<td><p>PUBG Game accounts linked to this GlobalAccount.</p></td>
 					</tr>
 				
 					<tr>
@@ -2819,6 +2997,13 @@
 						<td><a href="#pubg.globalaccounts.Profile">Profile</a></td>
 						<td></td>
 						<td><p>Profile information for this GlobalAccount.</p></td>
+					</tr>
+				
+					<tr>
+						<td>GameAccounts</td>
+						<td><a href="#pubg.globalaccounts.GameAccount">GameAccount</a></td>
+						<td>repeated</td>
+						<td><p>Headless Game Accounts associated with this Global Account</p></td>
 					</tr>
 				
 				</tbody>
@@ -6107,6 +6292,12 @@
 					<td>ErrPromotionNoCodesAvailable</td>
 					<td>67</td>
 					<td><p>Promotion has no more available codes.</p></td>
+				</tr>
+			
+				<tr>
+					<td>ErrUnknownEventTypeFromMailjet</td>
+					<td>68</td>
+					<td><p>Unknown event type from mailjet, support only `spam`, `unsub`</p></td>
 				</tr>
 			
 				<tr>

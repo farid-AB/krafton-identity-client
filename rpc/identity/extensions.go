@@ -37,3 +37,15 @@ func (ga *GlobalAccount) TraceTags() map[string]interface{} {
 		// TODO: Auths and Platforms
 	}
 }
+
+func (gar *GPPAccountResponse) TraceTags() map[string]interface{} {
+	if gar == nil {
+		return nil
+	}
+
+	return map[string]interface{}{
+		"code":    gar.Code,
+		"message": gar.Message,
+		"account": gar.Account.TraceTags(),
+	}
+}
